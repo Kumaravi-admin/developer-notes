@@ -1,43 +1,4 @@
-<style>
-  pre, code, pre code {
-    background: rgb(40, 44, 52) !important;
-    color: #abb2bf !important;
-    font-family: 'Fira Code', Consolas, Monaco, monospace !important;
-    border-radius: 6px;
-    padding: 12px 16px;
-  }
-  :not(pre) > code {
-    background: rgba(40, 44, 52, 0.1) !important;
-    color: rgb(246, 89, 64) !important;
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
-  .cr {
-    color: rgb(246, 89, 64);
-    font-width: bold;
-  }
-  .cb {
-    color: black;
-    font-width: bold;
-  }
-.pages {
-  background:white;
-  padding:30px;color:black;
-  font-family:Poppins bold,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;
-  font-width:bold;
-  min-width:794px;
-  margin: 10px auto;
-}
-
-</style>
-
-<div align="center" >
-<img src="./Git.png" width="100%" alt="Git"/>
-</div>
-
-<div class="git-notes-container pages">
-
-# <span class="cr" class="cr">Git:</span> <span class="cb">Notes Index</span>
+# Git: Notes Index
 
 |        |                                   |                                                                         |
 | :----: | :-------------------------------- | :---------------------------------------------------------------------- |
@@ -68,14 +29,9 @@
 
 ---
 
-<hr/>
+# Git: Introduction & Installation
 
-</div>
-<div class="git-notes-container pages">
-
-# <span class="cr">Git:</span> <span class="cb">Introduction & Installation</span>
-
-## <span class="cb">What is</span> <span class="cr">: Git</span>
+## What is : Git
 
 Git is a **distributed version control system (VCS)** that helps you track changes in your files and collaborate with others efficiently. It allows multiple people to work on a project without overwriting each other's work.
 
@@ -85,7 +41,7 @@ Think of Git as a way to:
 - Revert back to previous versions if something goes wrong.
 - Collaborate with others by merging changes from different team members.
 
-## <span class="cb">Importance of</span> <span class="cr">: Version Control Systems</span>
+## Importance of : Version Control Systems
 
 Before version control systems, people would manually save copies of files with names like: `project_v1`, `project_v2`, or `project_final_final_revised`. This approach is messy and error-prone. Git solves these problems:
 
@@ -93,12 +49,12 @@ Before version control systems, people would manually save copies of files with 
 **2 Collaborates easily** — Multiple people can work on the same file simultaneously.
 **3 Saves time** — Quickly identify who made changes and why.
 
-## <span class="cb">Difference Between</span> <span class="cr">: Git and GitHub</span>
+## Difference Between : Git and GitHub
 
 - **Git** is the tool for version control on your computer.
 - **GitHub** is a cloud-based platform where you can store your Git repositories and collaborate with others online.
 
-## <span class="cb">Installing Git</span> <span class="cr">: In Windows</span>
+## Installing Git : In Windows
 
 1. Download Git from the official site: git-scm.com.
 2. Run the installer.
@@ -114,14 +70,11 @@ Before version control systems, people would manually save copies of files with 
 
 ---
 
-</div>
-<div class="git-notes-container pages">
-
-# <span class="cr">Git:</span> <span class="cb">Basic Git Concepts</span>
+# Git: Basic Git Concepts
 
 Before diving into Git commands, it's important to understand how Git works conceptually. This will help you grasp what happens when you use Git commands.
 
-## <span class="cb">Key Concepts</span> <span class="cr">: in Git</span>
+## Key Concepts : in Git
 
 **1. Repository**
 
@@ -153,7 +106,7 @@ Every commit in Git is assigned a unique identifier called a hash.
 Example: `f4a7c8e93a9473d8ad8a6a43236c153b84f21e09`.
 Hashes make it easy to reference specific changes.
 
-## <span class="cb">How Git Works</span> <span class="cr">: Overview of Workflow</span>
+## How Git Works : Overview of Workflow
 
 **1** Modify Files in your working directory
 
@@ -165,10 +118,7 @@ Hashes make it easy to reference specific changes.
 
 ---
 
-</div>
-<div class="git-notes-container pages">
-
-# <span class="cr">Git:</span> <span class="cb">Configure Git Settings</span>
+# Git: Configure Git Settings
 
 Used to view, add, change, or remove Git configuration settings at the system, user, or repository level.
 
@@ -216,17 +166,14 @@ $ git config --global --edit
         name = Anjesh Kumar
 
 ~/.gitconfig [unix] (00:54 29/05/2026)                    3,20-27 All
-Type :qa and press <Enter> to exit Vim
+Type :qa and press  to exit Vim
 ```
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Starting a Project
 
-# <span class="cr">Git:</span> <span class="cb">Starting a Project</span>
-
-## <span class="cb">Initialize a Repository</span> <span class="cr">: git init</span>
+## Initialize a Repository : git init
 
 Creates a new Git repository in the current directory, allowing Git to start tracking files and changes in the project.
 
@@ -244,7 +191,7 @@ $ dir -a
 . .. .git Code.bash hello.txt
 ```
 
-## <span class="cb">Download an Existing Remote Project</span> <span class="cr">: git clone</span>
+## Download an Existing Remote Project : git clone
 
 Creates a local copy of an existing Git repository, including its files, commit history, and branch information.
 
@@ -281,12 +228,9 @@ $ cd git-repo
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Basic Snapshotting
 
-# <span class="cr">Git:</span> <span class="cb">Basic Snapshotting</span>
-
-## <span class="cb">Check Repository State</span> <span class="cr">: git status</span>
+## Check Repository State : git status
 
 Shows the current state of the repository, including modified files, staged changes, and untracked files.
 
@@ -301,7 +245,7 @@ $ cd /d/LearnCode/Git     # Move to the project working directory
 $ git status
 On branch master
 No commits yet
-Untracked files:  (use "git add <file>..." to include in what will be committed)
+Untracked files:  (use "git add ..." to include in what will be committed)
         Code.bash
         hello.txt
 
@@ -313,7 +257,7 @@ $ git status -s
 # ?? = untracked (Git doesn't know about this file yet)
 ```
 
-## <span class="cb">Stage Changes</span> <span class="cr">: git add</span>
+## Stage Changes : git add
 
 Adds new or modified files to the staging area, preparing them to be included in the next commit.
 
@@ -348,12 +292,9 @@ $ git add .
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Basic Snapshotting – II
 
-# <span class="cr">Git:</span> <span class="cb">Basic Snapshotting – II</span>
-
-## <span class="cb">View Changes</span> <span class="cr">: git diff</span>
+## View Changes : git diff
 
 Shows the differences between files, commits, or changes in the working directory and staging area.
 
@@ -375,7 +316,7 @@ index 3c7fba8..0000000
 -On branch master
 -No commits yet
 -Untracked files:
--(use "git add <file>..." to include in what will be committed)
+-(use "git add ..." to include in what will be committed)
 - hello.txt
 -$ git status -s
 -?? hello.txt
@@ -394,7 +335,7 @@ $ git diff --name-only
 hello.txt
 ```
 
-## <span class="cb">Save Changes Permanently</span> <span class="cr">: git commit</span>
+## Save Changes Permanently : git commit
 
 Takes a snapshot of everything in the staging area and saves it to history.
 
@@ -419,12 +360,9 @@ $ git commit -am "update hello.txt"
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Basic Snapshotting – III
 
-# <span class="cr">Git:</span> <span class="cb">Basic Snapshotting – III</span>
-
-## <span class="cb">Undo Local Changes</span> <span class="cr">: git restore</span>
+## Undo Local Changes : git restore
 
 Used to discard changes in files and restore them to a previous state, either from the staging area or the last commit.
 
@@ -448,7 +386,7 @@ $ git restore hello.txt
 $ git restore .
 ```
 
-## <span class="cb">Roll Back Commits</span> <span class="cr">: git reset</span>
+## Roll Back Commits : git reset
 
 Moves HEAD to a previous commit and can undo commits, with options to keep or remove changes from the staging area and
 working directory depending on the mode used.
@@ -480,12 +418,9 @@ HEAD is now at fe0f063 commit 1
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Basic Snapshotting – IV
 
-# <span class="cr">Git:</span> <span class="cb">Basic Snapshotting – IV</span>
-
-## <span class="cb">Delete a File from Tracking</span> <span class="cr">: git rm</span>
+## Delete a File from Tracking : git rm
 
 Removes a file from Git tracking and the working directory (or only from Git tracking if used with --cached). The file is deleted only
 if it matches the latest committed version, and it helps keep the repository and staging area in sync
@@ -518,7 +453,7 @@ $ git commit -m "Remove hello.txt"
 delete mode 100644 hello.txt
 ```
 
-## <span class="cb">Move or Rename Files</span> <span class="cr">: git mv</span>
+## Move or Rename Files : git mv
 
 Moves or renames files, directories, or symlinks in the repository. It updates the Git index automatically,
 but the change still needs to be committed.
@@ -551,12 +486,9 @@ create mode 100644 src/hello.txt
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Branching and Merging
 
-# <span class="cr">Git:</span> <span class="cb">Branching and Merging</span>
-
-## <span class="cb">What is a</span> <span class="cr">: Branch in Git</span>
+## What is a : Branch in Git
 
 A branch in Git is a **separate line of development**. It lets you work on features or changes without affecting the main code.
 
@@ -574,7 +506,7 @@ branch       --->  side path where you try new things
 
 ---
 
-## <span class="cb">Branch Management</span> <span class="cr">: git branch</span>
+## Branch Management : git branch
 
 Lists, creates, or deletes branches in a Git repository. By default, it shows local branches and highlights the current one. It can also
 display remote branches or all branches using specific options.
@@ -611,12 +543,9 @@ $ git branch -D feature-login
 Deleted branch feature-login (was ad226e4).
 ```
 
-</div>
-<div class="git-notes-container pages">
+# Git: Branching and Merging – II
 
-# <span class="cr">Git:</span> <span class="cb">Branching and Merging – II</span>
-
-## <span class="cb">Change Branches</span> <span class="cr">: git switch</span>
+## Change Branches : git switch
 
 Switches to another branch and updates your working files to match it. You can also create and switch to a new branch using -c.
 New commits will be added to the currently active branch.
@@ -662,12 +591,9 @@ Already on 'feature-login'
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Branching and Merging – III
 
-# <span class="cr">Git:</span> <span class="cb">Branching and Merging – III</span>
-
-## <span class="cb">Merge Branches</span> <span class="cr">: git merge</span>
+## Merge Branches : git merge
 
 Combines changes from another branch into the current branch.
 It is commonly used to bring completed work from a feature branch into the main branch.
@@ -705,9 +631,7 @@ $ git branch -d feature-login
 Deleted branch feature-login (was ad226e4).
 ```
 
-## <span class="cb">Merge Conflict</span> <span class="cr">: Resolve Conflicts
-
-</span>
+## Merge Conflict : Resolve Conflicts
 
 A merge conflict occurs when Git cannot automatically combine changes from different branches. You must manually review the
 conflicting code, choose the correct version (or combine both), and then complete the merge.
@@ -720,50 +644,7 @@ $ git merge feature-login
 $ git status
 
 # open the conflicted file — you will see this inside:
-# <<<<<<< HEAD          <- your code (main branch)
-# your version of code
-# =======
-# their version of code
-# >>>>>>> feature-login <- incoming branch
-
-# step 1 — remove the conflict markers
-# step 2 — keep the correct code
-# step 3 — stage the resolved file
-$ git add hello.txt
-
-# step 4 — commit the resolution
-$ git commit -m "Resolve conflict in hello.txt"
-
-# want to cancel the merge and go back?
-$ git merge --abort
-```
-
----
-
-</div>
-<div class="git-notes-container pages">
-
-# <span class="cr">Git:</span> <span class="cb">Branching and Merging – IV</span>
-
-## <span class="cb">Save Work Temporarily</span> <span class="cr">: git stash</span>
-
-Temporarily saves your uncommitted changes and restores the working directory to a clean state. You can later view, apply, or
-recover the saved changes when you're ready to continue working
-
-|     |                                 |                                                          |
-| :-: | :------------------------------ | :------------------------------------------------------- |
-|  ❶  | `git stash save "work_message"` | # Temporarily stash uncommitted local changes safely     |
-|  ❷  | `git stash list`                | # Review absolute history index logs tracking stashes    |
-|  ❸  | `git stash apply stash@{0}`     | # Restore specified stashed assets without removing it   |
-|  ❹  | `git stash pop`                 | # Apply latest stash and remove it from stash stack      |
-|  ❺  | `git stash drop stash@{0}`      | # Permanently destroy target single stash sequence asset |
-|  ❻  | `git stash clear`               | # Wipe completely all stashed logs buffer entries        |
-
-```bash
-$ cd /d/LearnCode/Git     # Move to the project working directory
------------------------------------------------------------------------------------------
-# create a file and make initial commit
-$ echo Hello World > hello.txt
+# >>>>>> feature-login  hello.txt
 $ git add hello.txt
 $ git commit -m "Initial commit"
 
@@ -798,12 +679,9 @@ $ git stash clear
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Branching and Merging – V
 
-# <span class="cr">Git:</span> <span class="cb">Branching and Merging – V</span>
-
-## <span class="cb">View Commit History</span> <span class="cr">: git log</span>
+## View Commit History : git log
 
 Displays the history of commits in a repository, including commit IDs, authors, dates, and messages. Various options can be used
 to customize how the commit history and changes are displayed.
@@ -823,13 +701,13 @@ $ cd /d/LearnCode/Git     # Move to the project working directory
 # Show the complete commit history with details
 $ git log
 commit 57363a64a7e2bfdae3c4617596223a9dd060e4a (HEAD -> master)
-Author: Anjesh Kumar <anjeshravi@yahoo.com>
+Author: Anjesh Kumar
 Date:   Fri May 29 02:15:41 2026 +0530
 
     update hello.txt
 
 commit 188ea87716f325bd870bd787967a8aa8d6524775
-Author: Anjesh Kumar <anjeshravi@yahoo.com>
+Author: Anjesh Kumar
 Date:   Fri May 29 02:14:34 2026 +0530
 
     Add hello.txt
@@ -847,7 +725,7 @@ $ git log --oneline --graph --all
 # Show only the last 5 commits
 $ git log -5
 commit 57363a64a7e2bfdae3c4617596223a9dd060e4a (HEAD -> master)
-Author: Anjesh Kumar <anjeshravi@yahoo.com>
+Author: Anjesh Kumar
 Date:   Fri May 29 02:15:41 2026 +0530
 
     update hello.txt
@@ -860,19 +738,16 @@ $ git log --oneline hello.txt
 # Show commits created by a specific author
 $ git log --author="Anjesh Kumar"
 commit e354a8d3f1a04a3dd4edf60b144d5a146b8ff178 (HEAD -> main)
-Author: Anjesh Kumar <anjeshravi@yahoo.com>
+Author: Anjesh Kumar
 Date:   Fri May 29 23:57:31 2026 +0530
     Initial commit
 ```
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Branching and Merging – VI
 
-# <span class="cr">Git:</span> <span class="cb">Branching and Merging – VI</span>
-
-## <span class="cb">Mark a Version</span> <span class="cr">: git tag</span>
+## Mark a Version : git tag
 
 Creates, lists, verifies, or deletes tags in a Git repository. Tags are commonly used to mark important commits, such as releases
 and version numbers (e.g., v1.0.0), making them easy to reference later.
@@ -918,12 +793,9 @@ e354a8d (HEAD -> master) your commit message here
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Remote and Team Work
 
-# <span class="cr">Git:</span> <span class="cb">Remote and Team Work</span>
-
-## <span class="cb">Connect to GitHub</span> <span class="cr">: git remote</span>
+## Connect to GitHub : git remote
 
 It is used to connect your local project with an online repository like GitHub. It helps you send your code to GitHub (push) and get
 updates from GitHub (pull), so both local and online versions stay in sync.,
@@ -953,10 +825,10 @@ $ git remote set-url origin https://github.com/Kumaravi-admin/git-repo.git
 $ git remote remove origin
 ```
 
-## <span class="cb">Upload Changes Online</span> <span class="cr">: git push</span>
+## Upload Changes Online : git push
 
 Sends your local commits (changes) to a remote repository like GitHub. It updates the remote branch with your latest work so
-others can see it or so your online repo stays updated. The basic format is git push <remote> <branch>.
+others can see it or so your online repo stays updated. The basic format is git push .
 
 |     |                                    |                                                   |
 | :-: | :--------------------------------- | :------------------------------------------------ |
@@ -989,12 +861,9 @@ Everything up-to-date
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Remote and Team Work – II
 
-# <span class="cr">Git:</span> <span class="cb">Remote and Team Work – II</span>
-
-## <span class="cb">Download and Merge</span> <span class="cr">: git pull</span>
+## Download and Merge : git pull
 
 Downloads the latest changes from a remote repository and merges them into your current branch. It helps keep your local
 project up to date with changes made in the remote repository.
@@ -1025,7 +894,7 @@ From https://github.com/Kumaravi-admin/git-repo
 Already up to date.
 ```
 
-## <span class="cb">Download Without Merging</span> <span class="cr">: git fetch</span>
+## Download Without Merging : git fetch
 
 Downloads the latest changes, branches, and tags from a remote repository without merging them into your current branch. It
 lets you review remote updates before deciding whether to merge or rebase them into your work.
@@ -1061,12 +930,9 @@ Already up to date.
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Inspection Advanced
 
-# <span class="cr">Git:</span> <span class="cb">Inspection Advanced</span>
-
-## <span class="cb">Compare Branches</span> <span class="cr">: git diff</span>
+## Compare Branches : git diff
 
 Shows the differences between files, commits, branches, or other Git states.
 It helps you compare changes and see what has been added, modified, or removed in a repository.
@@ -1134,12 +1000,9 @@ $ git diff 6360f6f 9481fc5
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Inspection Advanced – II
 
-# <span class="cr">Git:</span> <span class="cb">Inspection Advanced – II</span>
-
-## <span class="cb">Inspect a Commit</span> <span class="cr">: git show</span>
+## Inspect a Commit : git show
 
 Displays detailed information about a commit, tag, or other Git object. For commits, it shows the commit details, message, author,
 date, and the changes (diff) introduced by that commit.
@@ -1157,7 +1020,7 @@ $ cd /d/LearnCode/Git     # Move to the project working directory
 # See the most recent commit in detail
 $ git show
 commit 9481fc57cb60f17bc86f10dd276ea8f47f2179ba (HEAD -> master)
-Author: Anjesh Kumar <anjeshravi@yahoo.com>
+Author: Anjesh Kumar
 Date:   Sat May 30 15:15:50 2026 +0530
 
     second commit
@@ -1178,7 +1041,7 @@ $ git log --oneline
 # See a specific commit using its hash
 $ git show 09d6f82
 commit 09d6f82db43d68dca71a72b23aa26de4b6fbf680
-Author: Anjesh Kumar <anjeshravi@yahoo.com>
+Author: Anjesh Kumar
 Date:   Sat May 30 15:14:56 2026 +0530
 
     first commit
@@ -1194,7 +1057,7 @@ index 0000000..d8096cc
 # See only the files changed in a commit
 $ git show --name-only 09d6f82
 commit 09d6f82db43d68dca71a72b23aa26de4b6fbf680
-Author: Anjesh Kumar <anjeshravi@yahoo.com>
+Author: Anjesh Kumar
 Date:   Sat May 30 15:14:56 2026 +0530
 
     first commit
@@ -1208,12 +1071,9 @@ Hello Git Learner
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Undoing Advanced
 
-# <span class="cr">Git:</span> <span class="cb">Undoing Advanced</span>
-
-## <span class="cb">Undo a Pushed Commit</span> <span class="cr">: git revert</span>
+## Undo a Pushed Commit : git revert
 
 Creates a new commit that reverses the changes made by a previous commit. Unlike git reset, it does not delete commit history,
 making it the safest way to undo commits that have already been pushed to a remote repository.
@@ -1281,12 +1141,9 @@ $ git revert --abort
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Undoing Advanced – II
 
-# <span class="cr">Git:</span> <span class="cb">Undoing Advanced – II</span>
-
-## <span class="cb">Clean Up Commit History</span> <span class="cr">: git rebase</span>
+## Clean Up Commit History : git rebase
 
 Moves your commits to a new base commit, creating a cleaner and more linear project history. It is commonly used to update a
 feature branch with the latest changes from another branch or to combine and reorganize commits before merging.
@@ -1358,12 +1215,9 @@ Successfully rebased and updated refs/heads/feature-login.
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Undoing Advanced – III
 
-# <span class="cr">Git:</span> <span class="cb">Undoing Advanced – III</span>
-
-## <span class="cb">Pick One Commit</span> <span class="cr">: git cherry-pick</span>
+## Pick One Commit : git cherry-pick
 
 Takes existing commits and applies their changes onto your current branch as new commits.
 Your working directory must be clean, and if any conflict happens, Git pauses so you can fix it before continuing.
@@ -1417,12 +1271,9 @@ $ git cherry-pick --abort
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Ignore Files
 
-# <span class="cr">Git:</span> <span class="cb">Ignore Files</span>
-
-## <span class="cb">Ignore Files </span> <span class="cr">: .gitignore</span>
+## Ignore Files : .gitignore
 
 A .gitignore file specifies intentionally untracked files that Git should ignore. Files already tracked by Git are not affected. Each line
 in a .gitignore file specifies a pattern — Git checks each untracked file against these patterns before deciding whether to track it
@@ -1474,12 +1325,9 @@ $ git commit -m "Add .gitignore"
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Daily Workflow
 
-# <span class="cr">Git:</span> <span class="cb">Daily Workflow</span>
-
-## <span class="cb">Workflow</span> <span class="cr">Local</span>
+## Workflow Local
 
 This workflow explains a basic Git process for solo development. You start by initializing a repository, track and save changes using
 commits, and use branches to build new features safely. After completing the feature, you merge it back into the main branch and
@@ -1518,7 +1366,7 @@ $ git merge feature-dark-mode
 $ git branch -d feature-dark-mode
 ```
 
-## <span class="cb">Workflow</span> <span class="cr">Remote</span>
+## Workflow Remote
 
 This workflow shows how to use Git with GitHub for a solo project. You connect your repo to GitHub, push your code,
 and keep syncing changes as you work. Features are developed in branches, merged into main, and pushed again to GitHub.
@@ -1558,12 +1406,9 @@ $ git branch -d feature-dark-mode
 
 ---
 
-</div>
-<div class="git-notes-container pages">
+# Git: Daily Workflow – II
 
-# <span class="cr">Git:</span> <span class="cb">Daily Workflow – II</span>
-
-## <span class="cb">Workflow</span> <span class="cr">Team</span>
+## Workflow Team
 
 This workflow shows how teams work with Git and GitHub. You always start by pulling the latest code, then create a feature
 branch for your task. After working and committing changes, you update your branch with the latest main branch using rebase to
@@ -1615,5 +1460,3 @@ Everything up-to-date
 $ git branch -d feature-dark-mode
 Deleted branch feature-dark-mode (was f4e5d6c).
 ```
-
-</div>
