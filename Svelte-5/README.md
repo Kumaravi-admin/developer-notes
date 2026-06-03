@@ -1,61 +1,119 @@
-# Svelte 5 Notes
+# Svelte v5 Notes
 
-Practical Svelte 5 notes focused on modern component development and the Runes system.
+A comprehensive collection of **Svelte v5 Notes** covering Runes, Template Syntax, Styling, Special Elements, Runtime APIs, and Best Practices.
 
-## Overview
+These notes are designed for developers who want a structured, page-by-page reference while learning Svelte v5.
 
-These notes cover the core concepts of Svelte 5, including reactive state management, component composition, and application development patterns.
+## Features
+
+- Covers **68 pages** of Svelte v5 concepts
+- Beginner-friendly explanations
+- Practical code examples
+- Organized chapter-wise structure
+- Focus on Svelte 5 Runes and modern syntax
+- Useful as a quick reference guide
 
 ## Topics Covered
 
-### Fundamentals
-
-- Components
-- Props
-- Events
-- Bindings
-
 ### Runes
 
-- $state
-- $derived
-- $effect
-- $props
-- $inspect
-- $host
+- `$state`
+- `$derived`
+- `$effect`
+- `$props`
+- `$bindable`
+- `$inspect`
+- `$host`
 
-### Reactivity
+### Template Syntax
 
-- State Management
-- Derived Values
-- Side Effects
+- Basic Markup
+- Events
+- Text Expressions
+- Comments
+- `{#if}`
+- `{#each}`
+- `{#key}`
+- `{#await}`
+- `{#snippet}`
+- `{@render}`
+- `{@html}`
+- `{@const}`
+- `{@debug}`
+- `{@attach}`
+- `bind:`
+- Transitions
+- Animations
+- Classes
 
-### Component Development
+### Styling
 
-- Snippets
-- Slots
-- Composition Patterns
+- Scoped Styles
+- Global Styles
+- CSS Variables
+- Keyframes
+- Nested Styling
 
-### Application Features
+### Special Elements
 
-- Forms
-- Conditional Rendering
-- Lists
-- Lifecycle Features
+- `svelte:boundary`
+- `svelte:window`
+- `svelte:document`
+- `svelte:body`
+- `svelte:head`
+- `svelte:element`
+- `svelte:options`
+
+### Runtime APIs
+
+- `createContext`
+- Lifecycle Hooks
+- `onMount`
+- `onDestroy`
+- `tick`
 
 ### Best Practices
 
-- Component Organization
-- Reusability
-- Performance Considerations
+- State Management
+- Derived State
+- Component Design
+- Performance Optimization
+- Modern Svelte Patterns
 
-## Suitable For
+## Notes Structure
 
-- Frontend Developers
-- JavaScript Developers
-- React Developers Learning Svelte
-- Beginners
+| Pages | Topic                             |
+| ----- | --------------------------------- |
+| 1-4   | `$state`                          |
+| 5-7   | `$derived`                        |
+| 8-12  | `$effect`                         |
+| 13-18 | `$props`, `$bindable`, `$inspect` |
+| 19    | `$host`                           |
+| 20-58 | Template Syntax & Styling         |
+| 59-64 | Special Elements                  |
+| 65-66 | Runtime APIs                      |
+| 67-68 | Best Practices                    |
 
-## Version
+## Who Is This For?
 
-Svelte 5 Notes v1.0
+- Developers learning Svelte v5
+- React/Vue developers exploring Svelte
+- Students looking for concise notes
+- Anyone wanting a quick Svelte reference
+
+## Repository Contents
+
+```text
+Svelte-v5-Notes.md
+README.md
+```
+
+## Reference
+
+Official Svelte Documentation:
+
+https://svelte.dev/docs
+
+## License
+
+This repository is intended for educational purposes and personal learning.
