@@ -2647,3 +2647,2678 @@ db.students1.aggregate([
   },
 ]);
 ```
+
+## Page 41 — Aggregation Pipeline : $facet Operators
+
+### Collection : For Testing Query
+
+Create a Collection name sales for test Operators
+
+```js
+db.sales.insertMany([
+  { _id: 1, product: "Mobile", price: 100, quantity: 10, region: "North" },
+  { _id: 2, product: "Laptop", price: 200, quantity: 5, region: "South" },
+  { _id: 3, product: "Mobile", price: 100, quantity: 15, region: "North" },
+  { _id: 4, product: "Tablet", price: 50, quantity: 20, region: "East" },
+  { _id: 5, product: "Desktop", price: 125, quantity: 10, region: "South" },
+  { _id: 6, product: "Laptop", price: 200, quantity: 10, region: "West" },
+]);
+```
+
+### Example of : $facet
+
+$facet is useful for aggregating data in different ways without running multiple queries
+It allows you to perform multiple aggregation pipelines in parallel and return the results in a single document
+Example: Get top 3 products by total sale, total revenue from all sales, and
+total sales by region in a single query
+
+```js
+db.sales.aggregate([
+  {
+    $facet: {
+      topProducts: [
+        // get top 3 products by total sale
+        {
+          $group: {
+            _id: "$product",
+            totalSale: {
+              $sum: { $multiply: ["$price", "$quantity"] },
+            },
+          },
+        },
+
+        { $sort: { totalSale: -1 } },
+        { $limit: 3 },
+      ],
+      totalRevenue: [
+        // get total revenue from all sales
+        {
+          $group: {
+            _id: null,
+            totalRevenue: {
+              $sum: { $multiply: ["$price", "$quantity"] },
+            },
+          },
+        },
+      ],
+      salesByRegion: [
+        // get total sales by region
+        {
+          $group: {
+            _id: "$region",
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { totalSale: -1 } },
+      ],
+    },
+  },
+]);
+```
+
+---
+
+## Page 42 — Aggregation Pipeline : $fill Operators
+
+### Collection : For Testing Query
+
+Create a Collection name students for test Operators
+
+```js
+db.students.insertMany([
+  { _id: 1, name: "Akshay Kumar", class: "Btech", per: 52 },
+  { _id: 2, name: "Salman Khan", class: "BCA", per: 67 },
+  { _id: 3, name: "Deepika Padukone", class: "Btech", per: 83 },
+  { _id: 4, name: "John Abraham", class: "Btech" },
+  { _id: 5, name: "Katrina Kaif", class: "BCA", per: 77 },
+  { _id: 6, name: "Abhishek Bachan", class: "BCA", per: 44 },
+  { _id: 7, name: "Shahid Kapoor", class: "Btech" },
+  { _id: 8, name: "Amir Khan", class: "Btech", per: 38 },
+]);
+```
+
+### Example of : $fill
+
+It can fill missing values in a field based on different methods like linear interpolation, last observation carried forward (locf), or a constant value. It is useful when you have missing data in your dataset and you want to fill it with
+
+```js
+db.students.aggregate([
+  {
+    $fill: {
+      output: {
+        per: { value: 25 }, // Fill missing 'per' values with 25
+      },
+    },
+  },
+]);
+```
+
+### Example of : $fill with locf
+
+Fill missing 'per' values with the last observation carried forward (locf) This method fills missing values with the last non-null value encountered in the sequence. It is useful when you want to carry forward the last known value in a time series or sequential data.
+For example, if the last known percentage was 52, it will fill the next missing
+
+```js
+db.students.aggregate([
+  {
+    $fill: {
+      output: {
+        per: { method: "locf" }, // Fill missing 'per' values with 25
+      },
+    },
+  },
+]);
+```
+
+### Example of : $fill with linear
+
+This method fills missing values by interpolating between the last known value and the next known value. It is useful when you want to fill missing values in a continuous data series // For example, if the last known percentage was 52 and the next known percentage is 83, it will fill the missing value with a linear interpolation between these two values
+
+```js
+db.students.aggregate([
+  {
+    $fill: {
+      sortBy: { _id: 1 }, // Ensure the documents are sorted by _id before filling
+      partitionBy: "$class", // Fill missing 'per' values within each class
+      output: {
+        per: { method: "linear" }, // Fill missing 'per' values with 25
+      },
+    },
+  },
+]);
+```
+
+---
+
+## Page 43 — Aggregation Pipeline : Arithmetic Operators
+
+### Collection : For Testing Query
+
+Create a Collection name sales for test Operators
+
+```js
+db.sales.insertMany([
+  { _id: 1, product: "Mobile", price: 100, quantity: 52 },
+  { _id: 2, product: "Laptop", price: 150, quantity: 65 },
+  { _id: 3, product: "Tablet", price: 120, quantity: 30 },
+]);
+```
+
+### Addition Operator : $add
+
+Adding two fields or value together (performing addition operation)
+
+```js
+db.sales.aggregate([
+  {
+    $project: {
+      product: 1, // Including product field in the output
+      price: 1, // Including price field in the output
+      quantity: 1, // Including quantity field in the output
+      Result: { $add: ["$price", "$quantity"] }, // Adding price and quantity fields
+    },
+  },
+]);
+```
+
+### Subtraction Operator : $substract
+
+Subtracting one field from another (performing subtraction operation)
+
+```js
+db.sales.aggregate([
+  {
+    $project: {
+      Result: { $subtract: ["$price", "$quantity"] }, // Subtracting quantity from price
+    },
+  },
+]);
+```
+
+### Multiplication Operator : $multiply
+
+Multiplying two fields together (performing multiplication operation)
+
+```js
+db.sales.aggregate([
+  {
+    $project: {
+      Result: { $multiply: ["$price", "$quantity"] }, // Multiplying price and quantity
+    },
+    fields,
+  },
+]);
+```
+
+### Division Operator : $divide
+
+Dividing one field by another (performing division operation)
+
+> Note: Ensure that the divisor is not zero to avoid division by zero errors.
+
+```js
+db.sales.aggregate([
+  {
+    $project: {
+      Result: { $divide: [10, 2] }, // Dividing 10 by 2
+    },
+  },
+]);
+```
+
+---
+
+## Page 44 — Aggregation Pipeline : Arithmetic Operators-II
+
+### Division remainder Operator : $mod
+
+Finding the remainder of a division operation (modulus operation)
+
+> Note: Ensure that the divisor is not zero to avoid division by zero errors.
+
+```js
+db.sales.aggregate([
+  {
+    $project: {
+      Result: { $mod: [10, 3] }, // Finding the remainder of 10 divided by 3
+    },
+  },
+]);
+```
+
+### Power Operator : $pow
+
+Raising a number to the power of another number (exponentiation operation)
+
+> Note: The first argument is the base, and the second argument is the exponent.
+
+```js
+db.sales.aggregate([
+  {
+    $project: {
+      Result: { $pow: [2, 3] }, // Raising 2 to the power of 3
+    },
+  },
+]);
+```
+
+### Square Root Operator : $sqrt
+
+Calculating the square root of a number Note: The argument should be a non-negative number.
+
+```js
+db.sales.aggregate([
+  {
+    $project: {
+      Result: { $sqrt: 16 }, // Calculating the square root of 16
+    },
+  },
+]);
+```
+
+### Round up Operator : $ceil
+
+Rounding a number up to the nearest integer
+
+```js
+db.sales.aggregate([
+  {
+    $project: {
+      Result: { $ceil: 9.2 }, // Rounding 9.2 up to the nearest integer
+    },
+  },
+]);
+```
+
+### Round down Operator : $floor
+
+Rounding a number down to the nearest integer
+
+```js
+db.sales.aggregate([
+  {
+    $project: {
+      Result: { $floor: 9.2 }, // Rounding 9.2 down to the nearest integer
+    },
+  },
+]);
+```
+
+---
+
+## Page 45 — Aggregation Pipeline : Arithmetic Operators-III
+
+### Round Operator : $round
+
+Rounding a number to the nearest integer or specified decimal places if point value less thane 0.5 then it will round down otherwise it will round up
+
+```js
+db.sales.aggregate([
+  {
+    $project: {
+      Result: { $round: 9.2 }, // Rounding 9.2 to the nearest integer
+    },
+  },
+]);
+```
+
+### Truncating : $trunc
+
+Truncating a number to remove the decimal part
+
+```js
+db.sales.aggregate([
+  {
+    $project: {
+      Result: { $trunc: 9.2 }, // Truncating 9.2 to remove the decimal part
+    },
+  },
+]);
+```
+
+---
+
+## Page 46 — Aggregation Pipeline : String Operators
+
+### Collection : For Testing Query
+
+Create 3 Collection name students, students2, students3 for testing String Operators
+
+```js
+db.students.insertMany([
+  { _id: 1, name: "Akshay Kumar", dob: "jan 10 2010" },
+  { _id: 2, name: "Salman Khan", dob: "2010-02-03" },
+  { _id: 3, name: "Deepika Padukone", dob: "june 15 2010" },
+  { _id: 4, name: "John Abraham", dob: "WED jan 31 10:05:28 +03:30 2010" },
+  { _id: 5, name: "Katrina Kaif", dob: "dec 22 2010" },
+  { _id: 6, name: "     Test     " },
+]);
+
+db.students2.insertMany([
+  { _id: 1, firstName: "Akshay", lastName: "Kumar", age: 25 },
+  { _id: 2, firstName: "Salman", lastName: "Khan", age: 23 },
+  { _id: 3, firstName: "Deepika", lastName: "Padukone", age: 24 },
+  { _id: 4, firstName: "John", lastName: "Abraham", age: 25 },
+  { _id: 5, firstName: "Katrina", lastName: "Kaif", age: 23 },
+]);
+
+db.students3.insertMany([
+  { _id: 1, name: "Akshay Kumar", dob: ISODate("2008-01-15T08:15:39.736Z") },
+  { _id: 2, name: "Salman Khan", dob: ISODate("2009-08-01T08:15:39.736Z") },
+]);
+```
+
+### Upper Case Operator : $toUpper
+
+Converts a string to uppercase.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      upperCaseName: { $toUpper: "$name" },
+    },
+  },
+]);
+```
+
+### Lower Case Operator : $toLower
+
+Converts a string to lowercase.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      lowerCaseName: { $toLower: "$name" },
+    },
+  },
+]);
+```
+
+### String Length Operator : $strLenBytes
+
+Returns the length of a string in bytes.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      lengtInBytes: { $strLenBytes: "$name" },
+    },
+  },
+]);
+```
+
+---
+
+## Page 47 — Aggregation Pipeline : String Operators-II
+
+### String Length in Code Point Operator : $strLenCP
+
+Returns the length of a string in code points. This is useful for strings with multi-byte characters.
+It counts each character as one, regardless of how many bytes it uses.
+For example, "A" is 1 code point and 1 byte, while "𐌰" (a character from the Gothic script) is 1 code point but 4 bytes.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      lengtInCodePoints: { $strLenCP: "$name" },
+    },
+  },
+]);
+```
+
+### Compare two string Operator : $strcasecmp
+
+Compares two strings in a case-insensitive manner. Returns 0 if the strings are equal, a negative number if the first string is less than the second, and a positive number if the first string is greater than the second.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      comparison: { $strcasecmp: ["$name", "Akshay Kumar"] }, // Case-insensitive
+    },
+    comparison,
+  },
+]);
+```
+
+### Sub String Operator : $substrBytes
+
+Extracts a substring from a string based on byte position.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      substring: { $substrBytes: ["$name", 0, 5] }, // Extracting first 5 bytes
+    },
+  },
+]);
+```
+
+### Sub String Operator : $substrCP
+
+Extracts a substring from a string based on code point position.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      substring: { $substrCP: ["$name", 0, 5] }, // Extracting first 5 code points
+    },
+  },
+]);
+```
+
+---
+
+## Page 48 — Aggregation Pipeline : String Operators-III
+
+### Replace String Operator : $replaceOne
+
+Extracts a substring from a string based on code point position.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      updateString: {
+        $replaceOne: { input: "$name", find: "Khan", replacement: "Kapoor," }, //
+      },                              Replacing first occurrence of "Khan" with "Kapoor,"
+    },
+  },
+]);
+```
+
+### Replace String Operator : $replaceAll
+
+Replaces all occurrences of a substring within a string.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      updateString: {
+        $replaceAll: {
+          input: "My Name is Khan his name is Khan", // in reallife we use field like
+          find: "Khan",                                           "$name" not a string
+          replacement: "Kapoor,",
+        },
+      },
+    },
+  },
+]);
+```
+
+### Split String Operator : $split
+
+Splits a string into an array of substrings based on a specified delimiter.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      words: { $split: ["$name", " "] }, // Splitting by space
+    },
+  },
+]);
+```
+
+### Concate String Operator : $concat
+
+Concatenates two or more strings together.
+
+```js
+db.students2.aggregate([
+  {
+    $project: {
+      fullName: { $concat: ["$firstName", " ", "$lastName"] },
+    },
+  },
+]);
+```
+
+---
+
+## Page 49 — Aggregation Pipeline : String Operators-IV
+
+### Value to String Operator : $toString
+
+Converts a value to a string. This is useful for converting non-string values to strings.
+
+```js
+db.students2.aggregate([
+  {
+    $project: {
+      stringField: { $toString: "$age" },
+    },
+  },
+]);
+```
+
+### Left Trim Operator : $ltrim
+
+Removes whitespace or specified characters from the beginning of a string. left trim
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      trimmed: { $ltrim: { input: "$name", chars: " " } }, // Trimming leading spaces
+    },
+  },
+]);
+```
+
+### Right Trim Operator : $rtrim
+
+Removes whitespace or specified characters from the end of a string. right trim
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      trimmed: { $rtrim: { input: "$name", chars: " " } },
+    },
+  },
+]);
+```
+
+### Trim Operator : $trim
+
+Removes whitespace or specified characters from both ends of a string.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      trimmed: { $trim: { input: "$name", chars: " " } },
+    },
+  },
+]);
+```
+
+### String to Date Operator : $dateFromString
+
+Converts a string to a date object. This is useful for parsing date strings into MongoDB's date format.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      date: { $dateFromString: { dateString: "$dob" } },
+    },
+  },
+]);
+```
+
+---
+
+## Page 50 — Aggregation Pipeline : String Operators-V
+
+### Date to String Operator : $dateToString
+
+Converts a date object to a string in a specified format. Formatting date to "YYYY-MM-DD"
+
+```js
+db.students3.aggregate([
+  {
+    $project: {
+      name: 1,
+      date: { $dateToString: { format: "%Y-%m-%d", date: "$dob" } },
+    },
+  },
+]);
+```
+
+### Find Index of String Operator : $indexOfBytes
+
+Finds the index of a substring within a string, counting bytes.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      index: { $indexOfBytes: ["$name", "K"] },
+    },
+  },
+]);
+```
+
+### Find Index of String with start and end Operator : $indexOfByetes
+
+Finds the index of a substring within a string, counting bytes.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      index: { $indexOfBytes: ["$name", "K"] },
+    },
+  },
+]);
+```
+
+### Find Index of String with start and end Operator : $indexOfByetes
+
+Finds the index of a substring within a string, counting bytes, starting from a specific position and ending at another.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      index: { $indexOfBytes: ["$name", "k", 6, 15] },
+    },
+  },
+]);
+```
+
+### Find Index of String with Code Point Operator : $indexOfCP
+
+Finds the index of a substring within a string, counting code points.
+
+```js
+db.students.aggregate([{ {
+    $project: {
+      name: 1,
+      index: { $indexOfCP: ["$name", "man"] },
+    },
+  },
+}]);
+```
+
+---
+
+## Page 51 — Aggregation Pipeline : String Operators-VI
+
+### Regular Expressions Operator : $regexMatch
+
+Matches a string against a regular expression and returns the first match.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      isMatch: { $regexMatch: { input: "$name", regex: "^Kat" } },
+    },
+  },
+]);
+```
+
+### Regular Expressions Operator : $regexFind
+
+Finds the first occurrence of a substring that matches a regular expression.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      isMatch: { $regexFind: { input: "$name", regex: "^Sa" } },
+    },
+  },
+]);
+```
+
+### Regular Expressions Operator : $regexFindAll
+
+Finds all occurrences of substrings that match a regular expression.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      isMatch: { $regexFindAll: { input: "$name", regex: "K" } },
+    },
+  },
+]);
+```
+
+---
+
+## Page 52 — Aggregation Pipeline : Date Operators
+
+### Collection : For Testing Query
+
+Create a Collection name students for testing Date Operators
+
+```js
+db.students.insertMany([
+  { _id: 1, name: "Akshay Kumar", dob: ISODate("2008-01-15T08:15:39.736Z") },
+  { _id: 2, name: "Salman Khan", dob: ISODate("2009-08-01T08:15:39.736Z") },
+]);
+```
+
+### Date : Format Specifiers
+
+The following format specifiers are available for use in the \<formatString\>:
+
+| Specifiers | Description                                                                                                                     | Possible Values  |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| %b         | Abbreviated month name (3 letters) _New in version 7.0._                                                                        | jan-dec          |
+| %B         | Full month name _New in version 7.0._                                                                                           | january-december |
+| %d         | Day of month (2 digits, zero padded)                                                                                            | 01-31            |
+| %G         | Year in ISO 8601 format                                                                                                         | 0000-9999        |
+| %H         | Hour (2 digits, zero padded, 24-hour clock)                                                                                     | 00-23            |
+| %j         | Day of year (3 digits, zero padded)                                                                                             | 001-366          |
+| %L         | Millisecond (3 digits, zero padded)                                                                                             | 000-999          |
+| %m         | Month (2 digits, zero padded)                                                                                                   | 01-12            |
+| %M         | Minute (2 digits, zero padded)                                                                                                  | 00-59            |
+| %S         | Second (2 digits, zero padded)                                                                                                  | 00-60            |
+| %u         | Day of week number in ISO 8601 format (1-Monday, 7-Sunday)                                                                      | 1-7              |
+| %U         | Week of year (2 digits, zero padded)                                                                                            | 00-53            |
+| %V         | Week of Year in ISO 8601 format                                                                                                 | 01-53            |
+| %w         | Day of week (1-Sunday, 7-Saturday)                                                                                              | 1-7              |
+| %Y         | Year (4 digits, zero padded)                                                                                                    | 0000-9999        |
+| %z         | The timezone offset from UTC.                                                                                                   | +/-[hh][mm]      |
+| %Z         | The minutes offset from UTC as a number. For example, if the timezone offset (+/-[hhmm]) was +0445, the minutes offset is +285. | +/-mmm           |
+| %%         | Percent Character as a Literal                                                                                                  | %                |
+
+---
+
+## Page 53 — Aggregation Pipeline : Date Operators - II
+
+### Date Operator : $year, $month, $week
+
+these operators extract the year, month, and week from a date field.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      Year: { $year: "$dob" },
+      Month: { $month: "$dob" },
+      Week: { $week: "$dob" },
+    },
+  },
+]);
+```
+
+### Date Operator : $dayOfMonth, $dayOfWeek, $dayOfYear
+
+these operators extract the day of the month, day of the week, and day of the year from a date field.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      day: { $dayOfMonth: "$dob" },
+      dayofweek: { $dayOfWeek: "$dob" },
+      dayofyear: { $dayOfYear: "$dob" },
+    },
+  },
+]);
+```
+
+### Time Operator : $hour, $minute, $second, $millisecond
+
+these operators extract the hour, minute, second, and millisecond from a date field.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      Hour: { $hour: "$dob" },
+      Minutes: { $minute: "$dob" },
+      Second: { $second: "$dob" },
+      MilliSecond: { $millisecond: "$dob" },
+    },
+  },
+]);
+```
+
+### Date Add Operator : $dateAdd
+
+This operator add days, months, years, etc. to a date field.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      newDate: {
+        $dateAdd: {
+          startDate: "$dob",
+          unit: "day", // year,quarter,week,month,day,hour,minite,second,millisecond
+          amount: 5,
+        },
+      },
+    },
+  },
+]);
+```
+
+---
+
+## Page 54 — Aggregation Pipeline : Date Operators - III
+
+### Date Subtract Operator : $dateSubtract
+
+This operator subtracts days, months, years, etc. from a date field.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      newDate: {
+        $dateSubtract: {
+          startDate: "$dob",
+          unit: "month", // year,quarter,week,month,day,hour,minite,second,millisecond
+          amount: 1,
+        },
+      },
+    },
+  },
+]);
+```
+
+### Date Difference Operator : $dateDiff
+
+this operator calculates the difference between two dates in a specified unit.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      difference: {
+        $dateDiff: {
+          startDate: "$dob",
+          endDate: ISODate("2025-12-31T00:00:00Z"),
+          unit: "year", // year,quarter,week,month,day,hour,minite,second,millisecond
+        },
+      },
+    },
+  },
+]);
+```
+
+### Date Create Operator : $dateFromParts
+
+this operator constructs a date from individual components such as year, month, day, hour, minute, second, millisecond, and timezone. It can be used to create a date from separate fields or to manipulate date components.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      ConstructeDate: {
+        $dateFromParts: {
+          year: 2025,
+          month: 1,
+          day: 7,
+          hour: 15,
+          minute: 45,
+          second: 40,
+          millisecond: 150,
+          timezone: "Europe/London", //UTC
+        },
+      },
+    },
+  },
+]);
+```
+
+---
+
+## Page 55 — Aggregation Pipeline : Date Operators - IV
+
+### Date To Parts Operator : $dateToParts
+
+this operator breaks down a date into its individual components such as year, month, day, hour, minute, second, millisecond, and timezone.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      ConstructeDate: {
+        $dateToParts: {
+          date: "$dob",
+          timezone: "Europe/London", // by default UTC
+        },
+      },
+    },
+  },
+]);
+```
+
+### Date To Parts Operator : $dateTrunc
+
+this operator truncates a date to a specified unit, such as year, quarter, week, month, day, hour, minute, second, or millisecond.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      truncatedDate: {
+        $dateTrunc: {
+          date: "$dob",
+          unit: "month", // year,quarter,week,month,day,hour,minite,second,millisecond
+        },
+      },
+    },
+  },
+]);
+```
+
+### Date To String Operator : $dateToString
+
+this operator formats a date as a string according to a specified format.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      Date: {
+        $dateToString: {
+          date: "$dob",
+          format: "%d-%m-%Y", // Date Specific Format
+        },
+      },
+    },
+  },
+]);
+```
+
+---
+
+## Page 56 — Aggregation Pipeline : Date Operators - V
+
+### String to Date Operator : $toDate
+
+this operator converts a string or number to a date object. It can be used to convert
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      Date: {
+        $toDate: "2018-01-20",
+      },
+    },
+  },
+]);
+```
+
+### Date Operator : $isoDayOfWeek
+
+this operator extracts the ISO day of the week from a date field, where Monday is
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      isoDayOfWeek: {
+        $isoDayOfWeek: "$dob",
+      },
+    },
+  },
+]);
+```
+
+### Date Operator : $isoWeek
+
+this operator extracts the ISO week number from a date field, where the first week of the year is the week containing the first Thursday.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      isoWeekYear: {
+        $isoWeekYear: "$dob",
+      },
+    },
+  },
+]);
+```
+
+---
+
+## Page 57 — Aggregation Pipeline : Array Operators
+
+### Collection : For Testing Query
+
+Create 3 Collection name students, students2, students3 for testing Array Operators
+
+```js
+db.students.insertMany([
+  { _id: 1, name: "Akshay Kumar", hobbies: ["music", "travel", "painting"] },
+  {
+    _id: 2,
+    name: "Salman Khan",
+    hobbies: ["music", "travel", "books", "football"],
+  },
+]);
+
+db.students2.insertMany([
+  { _id: 1, name: "Akshay Kumar", marks: [55, 62, 52, 81] },
+  { _id: 2, name: "Salman Khan", marks: [68, 88, 54, 51] },
+]);
+
+db.students3.insertMany([
+  {
+    _id: 1,
+    name: "Akshay Kumar",
+    subjects: ["Math", "Science"],
+    extraSubjects: ["History", "Geography"],
+  },
+  {
+    _id: 2,
+    name: "Salman Khan",
+    subjects: ["Math", "Science"],
+    extraSubjects: ["Music", "Civics"],
+  },
+]);
+
+db.students4.insertMany([
+  {
+    _id: 1,
+    name: "Akshay Kumar",
+    subjects: ["Math", "Science", "History"],
+    marks: [85, 77, 82],
+  },
+  {
+    _id: 2,
+    name: "Salman Khan",
+    subjects: ["Math", "Science", "Music"],
+    marks: [88, 81, 95],
+  },
+]);
+
+db.students5.insertMany([
+  {
+    _id: 1,
+    name: "Akshay Kumar",
+    subjects: [
+      ["Math", 85],
+      ["Science", 77],
+      ["History", 82],
+    ],
+  },
+  {
+    _id: 2,
+    name: "Salman Khan",
+    subjects: [
+      ["Math", 88],
+      ["Science", 81],
+      ["Music", 95],
+    ],
+  },
+]);
+
+db.students6.insertMany([
+  { _id: 1, studentInfo: { name: "Akshay Kumar", age: 25 } },
+  { _id: 2, studentInfo: { name: "Salman Khan", age: 26 } },
+]);
+```
+
+---
+
+## Page 58 — Aggregation Pipeline : Array Operators-II
+
+### Array Element At Operator : $arrayElemAt
+
+This operator is used to access an element at a specific index in an array.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      selectedHobby: {
+        $arrayElemAt: ["$hobbies", 2], // Retrieves the hobby at index 2
+      },
+    },
+  },
+]);
+```
+
+### Array First + N Operator : $firstN
+
+This operator retrieves the first N elements from an array. example: if pass n as 2 then it will return first 2 elements of the array
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      topdHobby: {
+        $firstN: { input: "$hobbies", n: 2 }, // Retrieves the first 2 hobbies
+      },
+    },
+  },
+]);
+```
+
+### Array Last + N Operator : $lastN
+
+This operator retrieves the last N elements from an array. example: if pass n as 2 then it will return last 2 elements of the array.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      lastHobby: {
+        $lastN: { input: "$hobbies", n: 2 }, // Retrieves the last 2 hobbies
+      },
+    },
+  },
+]);
+```
+
+### Array Last + N Operator : $lastN
+
+This operator retrieves the last N elements from an array. example: if pass n as 2 then it will return last 2 elements of the array.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      lastHobby: {
+        $lastN: { input: "$hobbies", n: 2 }, // Retrieves the last 2 hobbies
+      },
+    },
+  },
+]);
+```
+
+---
+
+## Page 59 — Aggregation Pipeline : Array Operators-III
+
+### Maximum + N Operator : $maxN
+
+This operator retrieves the N largest elements from an array. example: if pass n as 2 then it will return top 2 elements of the array.
+
+```js
+db.students2.aggregate([
+  {
+    $project: {
+      name: 1,
+      topMarks: {
+        $maxN: { input: "$marks", n: 2 }, // Retrieves the top 2 marks
+      },
+    },
+  },
+]);
+```
+
+### Minimum + N Operator : $minN
+
+This operator retrieves the N smallest elements from an array. example: if pass n as 2 then it will return bottom 2 elements From Arr.
+
+```js
+db.students2.aggregate([
+  {
+    $project: {
+      name: 1,
+      topMarks: {
+        $minN: { input: "$marks", n: 2 }, // Retrieves the bottom 2 marks
+      },
+    },
+  },
+]);
+```
+
+### Array Slice Operator : $slice
+
+This operator is used to retrieve a subset of an array. It can be used to get a specific number of elements from the start or end of the array.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      selectedHobby: {
+        $slice: ["$hobbies", 1, 2], // Retrieves 2 hobbies starting from index 1
+      },
+    },
+  },
+]);
+```
+
+### Slice Operator with negative index : $slice
+
+This allows you to retrieve elements from the end of the array.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      selectedHobby: {
+        $slice: ["$hobbies", -2, 1], // Retrieves 2 hobbies starting from the last
+      },
+      element,
+    },
+  },
+]);
+```
+
+---
+
+## Page 60 — Aggregation Pipeline : Array Operators-IV
+
+### Sort Operators With String Array : $sortArray
+
+This operator sorts the elements of an array based on a specified order.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      shortedHobbies: {
+        $sortArray: { input: "$hobbies", sortBy: 1 }, // Sorts hobbies in ascending
+      },                                        order, for descending order use -1
+    },
+  },
+]);
+```
+
+### Sort Operators With Number Array : $sortArray
+
+This operator sorts the elements of an array based on a specified order.
+
+```js
+db.students2.aggregate([
+  {
+    $project: {
+      name: 1,
+      shortedHobbies: {
+        $sortArray: { input: "$marks", sortBy: 1 }, // Sorts marks in ascending order,
+      },                                                    for descending order use -1
+    },
+  },
+]);
+```
+
+### Array Reverse Operators : $reverseArray
+
+This operator reverses the order of elements in an array.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      reversedHobbies: {
+        $reverseArray: "$hobbies", // Reverses the order of hobbies
+      },
+    },
+  },
+]);
+```
+
+### Array Size Operators : $size
+
+This operator returns the number of elements in an array.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      HobbiesCount: {
+        $size: "$hobbies", // Returns the count of hobbies in the array
+      },
+    },
+  },
+]);
+```
+
+## Page 59 — Aggregation Pipeline : Array Operators-VI
+
+### Map (Loop) Operator : $map
+
+This operator applies a specified expression to each element in an array and returns a new array with the results.
+Example: Convert all hobbies to uppercase
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      upperCaseHobbies: {
+        $map: {
+          input: "$hobbies", // Input array of hobbies
+          as: "hobbies", // Variable name for each element in the input array
+          in: { $toUpper: "$$hobbies" }, // Converts each hobby to uppercase
+        },
+      },
+    },
+  },
+]);
+```
+
+### Map (Loop) Operator With Addition : $map
+
+This operator applies a specified expression to each element in an array and returns a new array with the results.
+Example: Add 2 to each mark in the marks array
+
+```js
+db.students2.aggregate([
+  {
+    $project: {
+      newMarks: {
+        $map: {
+          input: "$marks",
+          as: "marks",
+          in: { $add: ["$$marks", 2] }, // Adds 2 to each mark in the marks array
+        },
+      },
+    },
+  },
+]);
+```
+
+### Filter Operator : $filter
+
+This operator filters the elements of an array based on a specified condition and returns a new array with the elements that match the condition.
+
+```js
+db.students2.aggregate([
+  {
+    $project: {
+      AboveMarks: {
+        $filter: {
+          input: "$marks",
+          as: "marks",
+          cond: { $gte: ["$$marks", 60] }, // Filters marks greater than or equal to 60
+          limit: 1, // Optional: limits the number of elements in the result
+        },
+      },
+    },
+  },
+]);
+```
+
+---
+
+## Page 60 — Aggregation Pipeline : Array Operators-VII
+
+### Reduce Operator : $reduce
+
+This operator applies an expression to each element in an array, accumulating a single result.
+Example: Calculate the total marks by summing up all elements in the marks array
+
+```js
+db.students2.aggregate([
+  {
+    $project: {
+      TotalMarks: {
+        $reduce: {
+          input: "$marks",
+          initialValue: 0,
+          in: { $add: ["$$value", "$$this"] }, // Sums up all marks in the marks array
+        },
+      },
+    },
+  },
+]);
+```
+
+### Reduce Operator with string contact nation : $reduce
+
+This operator applies an expression to each element in an array, accumulating a single result.
+Example: Concatenate all hobbies into a single string
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      CombinedHobbies: {
+        $reduce: {
+          input: "$hobbies",
+          initialValue: "",
+          in: { $concat: ["$$value", "$$this"] }, // Concatenates all hobbies into a
+        },                                                               single string
+      },
+    },
+  },
+]);
+```
+
+### Range Operator : $range
+
+This operator generates an array of numbers within a specified range.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      numbers: {
+        $range: [1, 6, 2], // Generates an array of numbers from 1 to 6 with a step of 2
+      },
+    },
+  },
+]);
+```
+
+### Range Operator with negative step : $range
+
+This operator generates an array of numbers within a specified range, allowing for negative steps.
+
+```js
+db.students.aggregate([{
+    $project: {
+      numbers: {
+        $range: [10, 0, -2], // Generates an array of numbers from 10 to 0 with a step
+      },                                                                          of -2
+    },
+  },
+}, ]);
+```
+
+---
+
+## Page 61 — Aggregation Pipeline : Array Operators-VIII
+
+### Contact Operator : $concatArrays
+
+This operator concatenates two or more arrays into a single array.
+
+```js
+db.students3.aggregate([
+  {
+    $project: {
+      name: 1,
+      allSubjects: {
+        $concatArrays: ["$subjects", "$extraSubjects"], // Combines subjects and
+      },                                            extraSubjects into a single array
+    },
+  },
+]);
+```
+
+### Zip Operator : $zip
+
+This operator combines multiple arrays into an array of arrays, where each inner array contains elements from the input arrays at the same index.
+
+```js
+db.students4.aggregate([
+  {
+    $project: {
+      name: 1,
+      data: {
+        $zip: { inputs: ["$subjects", "$marks"] }, // Combines subjects and marks into
+      },                                                          an array of arrays
+    },
+  },
+]);
+```
+
+### Array to Object Operator : $arrayToObject
+
+This operator converts an array of key-value pairs into an object. Converts the subjects array into an object where each subject is a key and its corresponding mark is the value
+
+```js
+db.students5.aggregate([
+  {
+    $project: {
+      name: 1,
+      SubjectInfo: {
+        $arrayToObject: "$subjects",
+      },
+    },
+  },
+]);
+```
+
+### Object to Array Operator : $objectToArray
+
+This operator converts an object into an array of key-value pairs.
+
+```js
+db.students6.aggregate([
+  {
+    $project: {
+      name: 1,
+      SubjectInfo: {
+        $objectToArray: "$studentInfo", // Converts the studentInfo object into an array
+      },                                                              of key-value pairs
+    },
+  },
+]);
+```
+
+---
+
+## Page 62 — Aggregation Pipeline : Type Operators
+
+### Collection : For Testing Query
+
+Create a Collection name students for testing Type Operators
+
+```js
+db.students.insertMany([
+  {
+    _id: 1,
+    name: "Akshay Kumar",
+    age: "22",
+    marks: 82,
+    pass: true,
+    dob: ISODate("2002-03-27T16:58:51.538Z"),
+  },
+  {
+    _id: 2,
+    name: "Salman Khan",
+    age: "23",
+    marks: 33.58,
+    pass: false,
+    dob: ISODate("2001-05-15T18:15:35.264Z"),
+  },
+]);
+```
+
+### To String Operator : $toString
+
+converts a value to a string. Example: Convert the 'name' field to a string
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      StringValue: {
+        $toString: "$name", // Convert 'name' to string
+      },
+    },
+  },
+]);
+```
+
+### To Integer Operator : $toInt
+
+converts a value to an integer. Example: Convert the 'age' field to an integer
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      IntValue: {
+        $toInt: "$age", // Convert 'age' to integer
+      },
+    },
+  },
+]);
+```
+
+### To Integer Operator with decimal values : $toInt
+
+converts a decimal value to an integer. Example: Convert the 'marks' field to an integer
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      IntValue: {
+        $toInt: "$age", // Convert 'age' to integer
+      },
+    },
+  },
+]);
+```
+
+---
+
+## Page 63 — Aggregation Pipeline : Type Operators-II
+
+### To Integer Operator With Bool Filed : $toInt
+
+converts a boolean value to an integer. Example: Convert the 'pass' field to an integer
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      IntValue: {
+        $toInt: "$pass", // Convert 'pass' to integer (true -> 1, false -> 0)
+      },
+    },
+  },
+]);
+```
+
+### To Long Integer Operator : $toLong
+
+converts a value to a long integer. Example: Convert the 'marks' field to a long integer
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      IntValue: {
+        $toLong: "$marks", // Convert 'marks' to long integer
+      },
+    },
+  },
+]);
+```
+
+### To Double Operator : $toDouble
+
+converts a value to a double. Example: Convert the 'marks' field to a double
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      doubleValue: {
+        $toDouble: "$marks", // Convert 'marks' to double
+      },
+    },
+  },
+]);
+```
+
+### To Decimal Operator : $toDecimal
+
+converts a value to a decimal. Example: Convert the 'marks' field to a decimal
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      decimalValue: {
+        $toDecimal: "$marks", // Convert 'marks' to decimal
+      },
+    },
+  },
+]);
+```
+
+### Type Operators : $type
+
+returns the BSON data type of a field. It can be used in aggregation pipelines to identify the type of a field
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      fildType: {
+        $type: "$name", // Get the type of 'name' field
+      },
+    },
+  },
+]);
+```
+
+---
+
+## Page 64 — Aggregation Pipeline : Type Operators-III
+
+### To Bool Operators : $toBool
+
+converts a value to a boolean. Example: Convert the 'pass' field to Boolean
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      boolValue: {
+        $toBool: "$pass", // Convert 'pass' to boolean
+      },
+    },
+  },
+]);
+```
+
+### To Object ID Operators : $toObjectId
+
+converts a value to an ObjectId. It can be used in aggregation pipelines to transform data types Example: Convert a string to ObjectId
+Note: Ensure the string is a valid ObjectId format before conversion
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      ObjectId: {
+        $toObjectId: "6889bd7e7a007f86246c4bd0", // Convert string to ObjectId
+      },
+    },
+  },
+]);
+```
+
+### Convert Operators : $convert
+
+provides more flexibility in type conversion. It allows specifying the input, target type, and options
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      ConvertedValue: {
+        $convert: {
+          input: "$age", // Input value to convert
+          to: "int", // Target type
+        },
+      },
+    },
+  },
+]);
+```
+
+### Is Number Operators : $isNumber
+
+checks if a value is a number. It can be used in aggregation pipelines to filter or project numeric values
+Example: Check if the 'dob' field is a number (it should return false since
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      isNumber: {
+        $isNumber: "$dob", // Check if 'dob' is a number
+      },
+    },
+  },
+]);
+```
+
+---
+
+## Page 65 — Aggregation Pipeline : Conditional Operators
+
+### Collection : For Testing Query
+
+Create 3 Collection name products, users, students for testing Logic Operators
+
+```js
+db.products.insertMany([
+  { _id: 1, name: "Laptop", price: 1200, discounted: true },
+  { _id: 2, name: "Phone", price: 800, discounted: false },
+  { _id: 3, name: "Tablet", price: 600, discounted: true },
+]);
+
+db.users.insertMany([
+  { _id: 1, name: "Akshay Kumar", email: "akshay@email.com" },
+  { _id: 2, name: "Salman Khan" },
+  { _id: 3, name: "John Abraham", email: null },
+]);
+
+db.students.insertMany([
+  { _id: 1, name: "Akshay Kumar", percentage: 85 },
+  { _id: 2, name: "Salman Khan", percentage: 72 },
+  { _id: 3, name: "John Abraham", percentage: 58 },
+  { _id: 4, name: "Shahid Kapoor", percentage: 30 },
+]);
+```
+
+### $cond Operator With : if-then-else
+
+Thise operator allows you to perform conditional Logic in aggregation pipelines. Example: Categorize products based on price
+
+```js
+db.products.aggregate([
+  {
+    $project: {
+      name: 1,
+      price: 1,
+      priceCategory: {
+        $cond: {
+          if: { $gt: ["$price", 1000] }, // Check if price is greater than 1000
+          then: "Expensive", // If true, categorize as expensive
+          else: "Affordable", // If not, categorize as affordable
+        },
+      },
+    },
+  },
+]);
+```
+
+### Second Example of : if-then-else
+
+This operator allows you to apply conditional logic in aggregation pipelines. Example: Apply a discount if the product is discounted
+
+```js
+db.products.aggregate([
+  {
+    $project: {
+      name: 1,
+      price: 1,
+      OriginalPrice: "$price", // Keep original price
+      finalPrice: {
+        $cond: {
+          if: "$discounted", // Check if the product is discounted
+          then: { $multiply: ["$price", 0.9] }, // Apply 10% discount
+          else: "$price", // No discount
+        },
+      },
+    },
+  },
+]);
+```
+
+---
+
+## Page 66 — Aggregation Pipeline : Conditional Operators-II
+
+### If Null Operators : $ifNull
+
+This operator allows you to provide a default value if a field is null. Example: Provide a default value for email if it is null
+
+```js
+db.users.aggregate([
+  {
+    $project: {
+      name: 1,
+      Email: { $ifNull: ["$email", "No Email Provided"] }, // Use $ifNull to provide a
+    },                                              default value if email is null
+  },
+]);
+```
+
+### Switch Operators : $switch
+
+This operator allows you to perform multiple conditional checks. Example: Assign grades based on percentage
+Here, we categorize students based on their percentage scores into different grades.
+
+```js
+db.students.aggregate([
+  {
+    $project: {
+      name: 1, // Include the student's name
+      percentage: 1, // Include the student's percentage
+      grade: {
+        // Use $switch to categorize students based on their percentage
+        $switch: {
+          branches: [
+            // Define the conditions for each grade
+            { case: { $gte: ["$percentage", 80] }, then: "Merit" },
+            { case: { $gte: ["$percentage", 60] }, then: "Ist Devision" },
+            { case: { $gte: ["$percentage", 45] }, then: "IInd Devision" },
+            { case: { $gte: ["$percentage", 33] }, then: "IIIrd Devision" },
+          ],
+          default: "Fail", // Default case if none of the conditions match
+        },
+      },
+    },
+  },
+]);
+
+// If percentage is 80 or above, assign "Merit"
+// If percentage is 60 or above, assign "Ist Devision"
+// If percentage is 45 or above, assign "IInd Devision"
+// If percentage is 33 or above, assign "IIIrd Devision"
+```
+
+---
+
+## Page 67 — Aggregation Pipeline : Capped Collection
+
+### Capped Collection : capped
+
+This collection will store log entries with a maximum size of 50KB and a maximum of 5 documents. The oldest entries will be removed when the size limit is reached.
+
+```js
+// Create a capped collection named "log" with a size & limit
+
+db.createCollection("log", {
+  capped: true,
+  size: 51200, // max collection size 50KB
+  max: 5, // max number of document 5
+});
+// ---------------------------------------------------------------------------
+// Insert some log entries into the capped collection
+db.log.insertMany([
+  { message: "Log entry 1" },
+  { message: "Log entry 2" },
+  { message: "Log entry 3" },
+  { message: "Log entry 4" },
+  { message: "Log entry 5" },
+]);
+
+// ---------------------------------------------------------------------------
+// Insert a new log entry to trigger the capped collection behavior
+// This will remove the oldest entry (Log entry 1) to make space for the new entry
+
+db.log.insertOne({ message: "Log entry 6" });
+
+// Verify the contents of the capped collection
+db.log.find();
+
+// To see the most recent log entries, we can sort by natural order
+db.log.find().sort({ $natural: -1 });
+```
+
+### Is Capped Method : isCapped
+
+This Method use the check collection is Capped collection or no-capped collection
+
+```js
+db.log.isCapped(); // Check if the collection is capped
+```
+
+### Convert To Capped Collection : convertToCapped
+
+This Operator use to convert an existing collection to capped collection, Note : max option is not supported in convertToCapped
+
+```js
+// Convert an existing collection to a capped collection
+db.runCommand({ convertToCapped: "students", size: 51200 });
+```
+
+### Capped Max Operators : cappedMax
+
+Modify the capped collection to change the maximum number of documents
+
+```js
+//This command will not change the size of the capped collection, only the max number
+db.runCommand({ collMod: "log", cappedMax: 7 });
+```
+
+### Capped Size Operators : cappedSize
+
+Modify the capped collection to change the size limit,
+
+```js
+//This command will not change the maximum number of documents, only the size limit
+db.runCommand({ collMod: "log", cappedSize: 7 });
+```
+
+---
+
+## Page 68 — Indexing : Create, Get, Drop Indexes
+
+### Collection : For Testing Query
+
+Create a Collection name students for testing Index Methods & Operators
+
+```js
+db.students.insertMany([
+  {
+    _id: 1,
+    name: "Akshay Kumar",
+    age: 23,
+    class: "BCA",
+    email: "akshay@email.com",
+  },
+  {
+    _id: 2,
+    name: "Salman Khan",
+    age: 24,
+    class: "Btech",
+    email: "salman@email.com",
+  },
+  {
+    _id: 3,
+    name: "Shahid Kapoor",
+    age: 20,
+    class: "BSc",
+    email: "shahid@email.com",
+  },
+  {
+    _id: 4,
+    name: "John Abraham",
+    age: 19,
+    class: "BCA",
+    email: "john@email.com",
+  },
+  {
+    _id: 5,
+    name: "Amir Khan",
+    age: 24,
+    class: "Btech",
+    email: "amir@email.com",
+  },
+  {
+    _id: 6,
+    name: "Suniel Shetty",
+    age: 22,
+    class: "BCA",
+    email: "suniel@email.com",
+  },
+  {
+    _id: 7,
+    name: "Kartik Aryan",
+    age: 20,
+    class: "Btech",
+    email: "kartik@email.com",
+  },
+]);
+```
+
+### Explaining Indexing : 4 Step
+
+This code snippet demonstrates how to create, view, and drop indexes in a MongoDB collection named "students". It also shows how to run queries with explanations of their execution stats. there are examples of creating single field indexes, compound indexes, unique indexes, text indexes, and wildcard indexes. The code includes commands to insert documents into the collection and perform queries with explanations to analyze their performance. there are INDEXES in MongoDB, which are used to improve the performance of queries by allowing the database to quickly locate and access the data without scanning the entire collection. IXSCAN, COLLSCAN, FETCH and other terms refer to different types of index scans and query execution strategies in MongoDB.
+
+```js
+// 1. Create an index
+db.students.createIndex({ email: 1 });
+
+// 2. View indexes
+db.students.getIndexes();
+
+// 3. Run and explain a query
+db.students.find({ email: "kartik@email.com" }).explain("executionStats");
+
+// 4. Drop Indexes
+db.students.dropIndex("email_1");
+
+// -----------------------------------------------------------------------
+// Checking executionStats Object
+executionStats: {
+  executionTimeMillis: 0,          // Time MongoDB took to run the query (in ms)
+  totalKeysExamined: 1,            // Number of index entries scanned
+  totalDocsExamined: 1,            // Number of documents fetched
+  executionStages: {
+    isCached: false,               // Whether the result came from cache
+    stage: 'IXSCAN',               // Type of query scan (e.g., 'IXSCAN' for Index Scan)
+    indexName: '$**_1',            // Name of index used (may vary)
+    isUnique: false                // Whether the index is unique
+  }
+}
+```
+
+---
+
+## Page 69 — Indexing : Create, Get, Drop Indexes-II
+
+### Create Index : Single filed Indexes
+
+This code creates an index on the "name" field of the "students" collection,
+
+```js
+db.students.createIndex({
+  name: 1, // 1 for ascending order, -1 for descending order
+});
+// -----------------------------------------------------------------------
+// Show Indexes
+db.students.getIndexes();
+
+// Run and Explain Query
+db.students.find({ name: "Amir Khan" }).explain("executionStats");
+
+// Drop Indexes
+db.students.dropIndex("name_1");
+```
+
+### Create Index : Compound Indexes
+
+This code creates a compound index on the "class" and "age" fields of the "students" collection.
+
+```js
+db.students.createIndex({
+  class: 1, // 1 for ascending order, -1 for descending order
+  age: -1, // -1 for descending order
+});
+// -----------------------------------------------------------------------
+// Show Indexes
+db.students.getIndexes();
+
+// View documents where class is "BCA"
+
+db.students.find({ class: "BCA" });
+
+// Explain the query execution stats
+db.students.find({ class: "BCA" }).sort({ age: -1 }).explain("executionStats");
+```
+
+### Create Index : Unique Indexes
+
+This code creates a unique index on the "email" field of the "students" collection, ensuring that no two documents can have the same email address. If you try to insert a document with an email that already exists, it will throw an
+
+```js
+// Create Index
+
+db.students.createIndex(
+  { email: 1 }, // 1 for ascending order, -1 for descending order
+  { unique: true } // Ensure uniqueness
+);
+
+// -----------------------------------------------------------------------
+// Show Indexes
+db.students.getIndexes();
+// Show documents with a specific email
+db.students.find({ email: "suniel@email.com" });
+// Explain the query execution stats
+db.students.find({ email: "suniel@email.com" }).explain("executionStats");
+
+// If you try to insert a document with an email that already exists,
+it will throw an error
+db.students.insertOne(
+{ _id: 8, name: "Katrina Kaif", age: 21, class: "BCA", email: "kartik@email.com"}
+);
+```
+
+---
+
+## Page 70 — Indexing : Create, Get, Drop Indexes-III
+
+### Create Index : Text Index
+
+This code creates a text index on the "name" field of the "students" collection, allowing for text search capabilities.
+It then performs a text search for the term "Khan" in the "name"
+
+```js
+// Create Text Index
+db.students.createIndex({ name: "text" });
+
+// -----------------------------------------------------------------------
+// Show Indexes
+db.students.getIndexes();
+
+// Perform Text Search
+db.students.find({ $text: { $search: "Khan" } });
+
+// Explain the query execution stats
+db.students.find({ $text: { $search: "Khan" } }).explain("executionStats");
+```
+
+### Create Index : Wildcard Index
+
+This code creates a wildcard index on all fields in the "students" collection, allowing for
+
+```js
+// Create Wildcard Index
+db.students.createIndex({ "$**": 1 });
+
+// -----------------------------------------------------------------------
+// Show Indexes
+db.students.getIndexes();
+
+// Find documents with a specific email
+db.students.find({ email: "suniel@email.com" });
+
+// Explain the query execution stats
+db.students.find({ email: "suniel@email.com" }).explain("executionStats");
+```
+
+---
+
+## Page 71 — MongoDatabse Tool : Import Json File, Backup & Restore Database
+
+### 1st Step : Download & Install
+
+Visit and download the MongoDB Command Line Database Tools from the official MongoDB website.
+
+```
+1) https://www.mongodb.com/try/download/database-tools
+2) Install the downloaded tools by just simply click on Next and Next.
+```
+
+### 2nd Step : Set Environment Variable
+
+After installation, set the environment variable for the MongoDB Database Tools.
+
+```
+1) search for "Environment Variables" in the Windows search bar.
+2) In the System Properties window, click on the "Environment Variables" button.
+3) In the Environment Variables window, under "System variables",
+   double click on "Path" Variable.
+4) In the Edit Environment Variable window, click on "New" and add the path to the
+   MongoDB Database Tools installation directory.
+5) Click OK to close all windows.
+The default installation path is usually "C:\Program Files\MongoDB\Tools\100\bin".
+```
+
+### Import Json Data : mongoimport
+
+Open a new Command Prompt and execute the following command to insert data from a JSON file into a MongoDB database.
+
+```bash
+// Make sure to replace "D:/test.json" with the actual path to your JSON
+// file, "school" with your database name, and "testing" with your collection name.
+
+mongoimport "D:/test.json" -d school -c testing --jsonArray
+
+db.testing.find() // verify the import by run this command
+```
+
+### Backup Database & Collection : mongodump
+
+Those commands are used to backup a MongoDB database, collection, or all databases. All command have two variant
+
+```bash
+// Database Backup Command : Backup the 'school' database to 'c:\backup'
+mongodump -d school -o c:\backup
+
+// Collection Backup Command : Backup the 'students' collection from the 'school' database to 'c:\backup'
+mongodump -d school -c students -o c:\backup
+
+// All Databases Backup Command
+mongodump -o c:\backup // Backup all databases to 'c:\backup'
+```
+
+### Restore Database & Collection : mongorestore
+
+those commands are used to restore the database or collection from the backup created above
+
+```bash
+// Restore Collection Command : Restore the 'students' collection from the backup
+mongorestore -d school -c students C:\backup\school\students.bson
+
+// Restore Database Command : Restore the 'school' database from the backup
+mongorestore -d office C:\backup\school
+
+// Restore All Databases Command : Restore all databases from the backup
+mongorestore --dir C:\backup
+```
+
+---
+
+## Page 72 — User Management : Built-in Roles
+
+### Roles : Database-Specific Roles
+
+| Role      | Description                                                                                          |
+| --------- | ---------------------------------------------------------------------------------------------------- |
+| read      | Allows the user to read data from the database.                                                      |
+| readWrite | Allows the user to read and write data to the database.                                              |
+| dbAdmin   | Allows the user to perform administrative tasks (e.g., indexing, schema operations) on the database. |
+| userAdmin | Allows the user to manage users and roles within the database.                                       |
+| dbOwner   | Combines readWrite, dbAdmin, and userAdmin roles for the database.                                   |
+
+### Roles : Backup & Restoration Roles
+
+| Role    | Description                                   |
+| ------- | --------------------------------------------- |
+| Backup  | Allows the user to back up the database       |
+| Restore | Allows the user to restore data from backups. |
+
+### Roles : User Administration Roles
+
+| Role                 | Description                                      |
+| -------------------- | ------------------------------------------------ |
+| userAdminAnyDatabase | Allows the user to manage users on any database. |
+| dbAdminAnyDatabase   | Provides dbAdmin privileges for all databases.   |
+
+### Roles : Super user Roles
+
+| Role | Description                                                                         |
+| ---- | ----------------------------------------------------------------------------------- |
+| root | Full administrative access to all databases, users and operations, (Superuser Role) |
+
+### Roles : Read Only Roles
+
+| Role            | Description                               |
+| --------------- | ----------------------------------------- |
+| readAnyDatabase | Allows read-only access to all databases. |
+
+### Roles : Cluster-Level Roles
+
+| Role           | Description                                                                    |
+| -------------- | ------------------------------------------------------------------------------ |
+| clusterAdmin   | Provides full control over the cluster (sharding, replication, etc.).          |
+| clusterManager | Allows monitoring and managing the cluster, but without full admin privileges. |
+| clusterMonitor | Provides read-only access to cluster status and metrics.                       |
+| hostManager    | Allows managing server instances and monitoring processes.                     |
+
+---
+
+## Page 73 — User Management : Enable Authentication and User Management
+
+### 1st Step : Open configuration file
+
+Open the MongoDB configuration file, The path may vary based on your installation, but it is typically found at:
+
+```
+C:\Program Files\MongoDB\Server\<version>\bin\mongod.cfg
+```
+
+### 2nd Step : Enable authentication
+
+find the security and remove # to uncomment and add the following lines
+
+```
+security:
+  authorization: enabled  // give 1 or 2 space before the line
+```
+
+### 3rd : Restart Mongo DB services
+
+Save the configuration file and restart the MongoDB service for changes to take effect
+
+```
+1. Press Window + R Key to open the Run dialog.
+2. Type "services.msc" and press Enter.
+3. Find "MongoDB Server" in the list.
+4. Right-click on it and select "Restart".
+```
+
+### Check : authentication is enabled or not
+
+Open a command prompt and connect to MongoDB using the mongo shell, Run any command that requires authentication like
+
+```
+school> show collections
+
+
+if you get error like
+MongoServerError[Unauthorized]: not authorized on school to execute command {
+listCollections: 1, filter: {}, cursor: {}, nameOnly: true, authorizedCollections:
+false, lsid: { id: UUID("5e666838-b2ba-4627-9a04-82c00c79b34c") }, $db: "school" }
+It's mean authentication is correctly implement and running
+
+
+If you see a list of collection without being prompted, authentication is not enabled
+correctly.
+```
+
+---
+
+## Page 74 — User Management : Authentication - Create Users
+
+### Create User : Admin user
+
+Create an admin user with a username and password, this admin user have all Database access
+
+```js
+| 1. Switch to admin database
+|--------------------------------------------------------------------------
+| use admin
+|--------------------------------------------------------------------------
+
+| 2. Create an admin user with a username and password
+|--------------------------------------------------------------------------
+| db.createUser({
+|   user: "admin",                   // User name
+|   pwd: "admin123",                 // User name
+|   roles: [{role: "root",db:"admin"}] // role and Database access
+| })
+|--------------------------------------------------------------------------
+
+| 3. Login as Admin User
+|--------------------------------------------------------------------------
+  db.auth("admin","admin123")
+|--------------------------------------------------------------------------
+```
+
+### Create User : Developer user
+
+Create an Developer user, Developer user can only ready school database
+
+```js
+| 1. Switch to admin database
+|--------------------------------------------------------------------------
+| use admin
+|--------------------------------------------------------------------------
+
+| 2. Login as Admin User
+|--------------------------------------------------------------------------
+|  db.auth("admin","admin123")
+|--------------------------------------------------------------------------
+
+| 3. Create an developer user with a username and password
+|--------------------------------------------------------------------------
+| db.createUser({
+|   user: "developer",                        // User name
+|   pwd: "dev123",                            // User name
+|   roles: [{role: "read",db:"school"}]  // role and Database access
+| })
+|--------------------------------------------------------------------------
+
+| 4. Login as Developer User
+|--------------------------------------------------------------------------
+  db.auth("developer","dev123")
+|--------------------------------------------------------------------------
+```
+
+---
+
+## Page 75 — User Management : Authentication - Get Users
+
+### Get all : User details
+
+Get All Users Details first Login With Admin user that user they have root access
+
+```js
+| 1. Login as Admin User or that user they have root access
+|--------------------------------------------------------------------------
+  test> use admin                             // switch to admin database
+  admin> db.auth("admin","admin123")          // login as admin
+|--------------------------------------------------------------------------
+
+| 2. Get All Users Details
+|--------------------------------------------------------------------------
+  db.getUsers()                               // this will return all users
+|--------------------------------------------------------------------------
+
+| You get all users information (details) like this
+|--------------------------------------------------------------------------
+  {
+    users: [
+      {
+        _id: 'admin.admin',
+        userId: UUID('3037dc37-2fad-45d4-a058-e6652246b6ad'),
+        user: 'admin',
+        db: 'admin',
+        roles: [ { role: 'root', db: 'admin' } ],
+        mechanisms: [ 'SCRAM-SHA-1', 'SCRAM-SHA-256' ]
+      },
+      {
+        _id: 'admin.developer',
+        userId: UUID('7a723e17-76bf-4831-bf93-2ba7e0197ab0'),
+        user: 'developer',
+        db: 'admin',
+        roles: [ { role: 'read', db: 'school' } ],
+        mechanisms: [ 'SCRAM-SHA-1', 'SCRAM-SHA-256' ]
+      }
+    ],
+    ok: 1
+  }
+|--------------------------------------------------------------------------
+```
+
+### Get Single : User details
+
+Get Single User Details, first Login With Admin user that user they have root access
+
+```js
+| 1. Login as Admin User or that user they have root access
+|--------------------------------------------------------------------------
+  db.auth("admin","admin123")
+|--------------------------------------------------------------------------
+
+| 2. Get Single User Details
+|--------------------------------------------------------------------------
+  db.getUser("developer")                     // Pass user name as parameter
+|--------------------------------------------------------------------------
+
+{
+  _id: 'admin.developer',
+  userId: UUID('7a723e17-76bf-4831-bf93-2ba7e0197ab0'),
+  user: 'developer',
+  db: 'admin',
+  roles: [ { role: 'read', db: 'school' } ],
+  mechanisms: [ 'SCRAM-SHA-1', 'SCRAM-SHA-256' ]
+}
+```
+
+---
+
+## Page 76 — User Management : Authentication – Update Users
+
+### Update : User Details
+
+To update user details ---> 1 switch to admin database, then login as admin, then, run update user command
+
+```js
+| 1. Switch to admin database
+|--------------------------------------------------------------------------
+|
+| use admin
+|--------------------------------------------------------------------------
+
+| 2. Login as Admin User or that user they have root access
+|--------------------------------------------------------------------------
+|
+| db.auth("admin","admin123")
+|
+|--------------------------------------------------------------------------
+
+| 3. Update user role & password
+|--------------------------------------------------------------------------
+| db.updateUser(
+|       "developer",          // user name
+|       {pwd: "dev1234"},      // new password
+|       {roles: [{ role: "readWrite", db: "school" }]}
+| )
+|--------------------------------------------------------------------------
+```
+
+### Change : User Password
+
+A dedicated shorthand command for changing passwords
+
+```js
+| 1. Switch to admin database
+|--------------------------------------------------------------------------
+|
+| use admin
+|--------------------------------------------------------------------------
+
+| 2. Login as Admin User or that user they have root access
+|--------------------------------------------------------------------------
+|
+| db.auth("admin","admin123")
+|
+|--------------------------------------------------------------------------
+
+| 3. Update user password
+|--------------------------------------------------------------------------
+| db.changeUserPassword(
+|     "developer",             // user name
+|     "pass123"                // new password
+| )
+|--------------------------------------------------------------------------
+```
+
+---
+
+## Page 77 — User Management : Authentication – Delete Users
+
+### Drop : Single User
+
+To drop single user ---> 1 switch to admin database, then login as admin, then, run drop command
+
+```js
+| 1. Switch to admin database
+|--------------------------------------------------------------------------
+|
+| use admin
+|
+|--------------------------------------------------------------------------
+
+| 2. Login as Admin User or that user they have root access
+|--------------------------------------------------------------------------
+|
+| db.auth("admin","admin123")
+|
+|--------------------------------------------------------------------------
+
+| 3. Drop / delete single user
+|--------------------------------------------------------------------------
+|
+| db.dropUser("developer")
+|
+|--------------------------------------------------------------------------
+```
+
+### Drop : All User
+
+To drop all user ---> 1 switch to admin database, then login as admin, then, run drop all users command
+
+```js
+| 1. Switch to admin database
+|--------------------------------------------------------------------------
+|
+| use admin
+|--------------------------------------------------------------------------
+
+| 2. Login as Admin User or that user they have root access
+|--------------------------------------------------------------------------
+|
+| db.auth("admin","admin123")
+|
+|--------------------------------------------------------------------------
+
+| 3. Drop / delete all users
+|--------------------------------------------------------------------------
+|
+| db.dropAllUsers()
+|
+|--------------------------------------------------------------------------
+```
+
+---
+
+## Page 78 — User Management : Authentication – Grant Roles to Users
+
+### Grant Role : to User
+
+This command is used to grant additional roles to an existing MongoDB user without removing their current roles.
+
+```js
+| 1. Switch to admin database
+|--------------------------------------------------------------------------
+|
+| use admin
+|--------------------------------------------------------------------------
+
+| 2. Login as Admin User or that user they have root access
+|--------------------------------------------------------------------------
+|
+| db.auth("admin","admin123")
+|
+|--------------------------------------------------------------------------
+
+| 3. Grant / (add) new roles to users
+|--------------------------------------------------------------------------
+| db.grantRolesToUser(
+|     "developer",                    // user name
+|     [{role: "dbOwner", db: "school"}]   // new roles
+| )
+|--------------------------------------------------------------------------
+```
+
+### Delete : User Roles
+
+To drop all user ---> 1 switch to admin database, then login as admin, then, run drop all users command
+
+```js
+| 1. Switch to admin database
+|--------------------------------------------------------------------------
+|
+| use admin
+|--------------------------------------------------------------------------
+
+| 2. Login as Admin User or that user they have root access
+|--------------------------------------------------------------------------
+|
+| db.auth("admin","admin123")
+|
+|--------------------------------------------------------------------------
+
+| 3. Drop / delete all users
+|--------------------------------------------------------------------------
+| db.revokeRolesFromUser(
+|     "developer",                       // user name
+|     [{role: "read", db: "school"}]     // roles you want to delete
+| )
+|--------------------------------------------------------------------------
+```
