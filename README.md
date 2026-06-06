@@ -6,12 +6,12 @@ This repository contains structured learning notes, commands, code examples, and
 
 ## Contents
 
-- Git
-- Laravel (11 & 12)
-- MongoDB
-- ReactJS
-- React Native
-- Svelte 5
+- Git [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/Git/Git-notes.pdf)
+- Laravel (11 & 12) [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/Laravel/Laravel-12%20Notes.pdf)
+- MongoDB [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/MongoDB/MongoDB-v8.0.9-notes.pdf)
+- ReactJS [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/ReactJs/React-v18-notes.pdf)
+- React Native [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/ReactJs/React-v18-notes.pdf)
+- Svelte 5 [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/Svelte-5/Svelte-v5-notes.pdf)
 
 ## Purpose
 

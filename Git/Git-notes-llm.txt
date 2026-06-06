@@ -1,0 +1,1449 @@
+# Git Notes for Beginners
+# Source: Git-notes.md
+# Format: llm.txt — plain text, LLM-optimized
+# Topics: 24 sections covering Git basics to advanced workflows
+# ======================================================================
+
+======================================================================
+GIT: NOTES INDEX
+======================================================================
+
+
+======================================================================
+GIT: INTRODUCTION & INSTALLATION
+======================================================================
+
+
+What is : Git
+-------------
+
+Git is a distributed version control system (VCS) that helps you track changes in your files and collaborate with others efficiently. It allows multiple people to work on a project without overwriting each other's work.
+
+Think of Git as a way to:
+
+- Keep a history of all changes in your project.
+- Revert back to previous versions if something goes wrong.
+- Collaborate with others by merging changes from different team members.
+
+
+Importance of : Version Control Systems
+---------------------------------------
+
+Before version control systems, people would manually save copies of files with names like: project_v1, project_v2, or project_final_final_revised. This approach is messy and error-prone. Git solves these problems:
+
+1 Tracks changes automatically — No need to rename files.
+2 Collaborates easily — Multiple people can work on the same file simultaneously.
+3 Saves time — Quickly identify who made changes and why.
+
+
+Difference Between : Git and GitHub
+-----------------------------------
+
+- Git is the tool for version control on your computer.
+- GitHub is a cloud-based platform where you can store your Git repositories and collaborate with others online.
+
+
+Installing Git : In Windows
+---------------------------
+
+1. Download Git from the official site: git-scm.com.
+2. Run the installer.
+3. Select the default options (or customize if needed).
+4. Verify installation: Open Command Prompt and type
+
+  git --version  ->  Verify Git is installed
+  git config --global user.name "Your Name"  ->  Set your name
+  git config --global user.email "your.email@example.com"  ->  Set your email
+  git config --list  ->  Verify your settings
+
+
+======================================================================
+GIT: BASIC GIT CONCEPTS
+======================================================================
+
+Before diving into Git commands, it's important to understand how Git works conceptually. This will help you grasp what happens when you use Git commands.
+
+
+Key Concepts : in Git
+---------------------
+
+1. Repository
+
+A Git repository is where Git tracks changes in your project. It's essentially a folder where Git saves:
+
+- The current version of your files.
+- The history of all previous versions.
+- Metadata about the changes.
+- Local Repository — Stored on your computer.
+- Remote Repository — Stored on a server (e.g., GitHub, GitLab).
+
+2. Working Directory, Staging Area, and Commit History
+
+Git operates with three main areas:
+
+
+3. Snapshot-Based Version Control
+
+Git takes "snapshots" of your files. When you commit, Git saves a snapshot of every tracked file at the time of commit. If a file hasn't changed, Git doesn't store it again — it just links to the previous identical version. This makes Git efficient without being diff-based.
+
+4. SHA-1 Hash
+
+Every commit in Git is assigned a unique identifier called a hash.
+Example: f4a7c8e93a9473d8ad8a6a43236c153b84f21e09.
+Hashes make it easy to reference specific changes.
+
+
+How Git Works : Overview of Workflow
+------------------------------------
+
+1 Modify Files in your working directory
+
+2 Stage Changes — Add files to the staging area with git add.
+
+3 Commit Changes — Save the staged changes to the commit history with git commit.
+
+4 (Optional) Push Changes — Send commits to a remote repository like GitHub.
+
+
+======================================================================
+GIT: CONFIGURE GIT SETTINGS
+======================================================================
+
+Used to view, add, change, or remove Git configuration settings at the system, user, or repository level.
+
+  git config --global user.name "Your Name"  ->  Set your global profile username
+  git config --global user.email "email@example.com"  ->  Set your account communication email
+  git config --list  ->  Print list to verify active config values
+  git config --global --edit  ->  Open standard global config in default editor
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # set your name and email
+  $ git config --global user.name "Anjesh Kumar"
+  $ git config --global user.email "anjeshravi@yahoo.com"
+  
+  $ git config --list
+  diff.astextplain.textconv=astextplain
+  filter.lfs.clean=git-lfs clean -- %f
+  filter.lfs.smudge=git-lfs smudge -- %f
+  filter.lfs.process=git-lfs filter-process
+  filter.lfs.required=true
+  http.sslbackend=openssl
+  http.sslcainfo=C:/Program Files/Git/mingw64/etc/ssl/certs/ca-bundle.crt
+  core.autocrlf=true
+  core.fscache=true
+  core.symlinks=false
+  pull.rebase=false
+  credential.helper=manager
+  credential.https://dev.azure.com.usehttppath=true
+  init.defaultbranch=master
+  user.email=anjeshravi@yahoo.com
+  user.name=Anjesh Kumar
+  core.repositoryformatversion=0
+  core.filemode=false
+  core.bare=false
+  core.logallrefupdates=true
+  core.symlinks=false
+  core.ignorecase=true
+  
+  $ git config --global --edit
+  [user]
+          email = anjeshravi@yahoo.com
+          name = Anjesh Kumar
+  
+  ~/.gitconfig [unix] (00:54 29/05/2026)                    3,20-27 All
+  Type :qa and press  to exit Vim
+
+
+======================================================================
+GIT: STARTING A PROJECT
+======================================================================
+
+
+Initialize a Repository : git init
+----------------------------------
+
+Creates a new Git repository in the current directory, allowing Git to start tracking files and changes in the project.
+
+  git init  ->  Initialize a new Git repository
+  dir –a  ->  Verify it worked — .git folder should appear
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  $ git init
+  Initialized empty Git repository in D:/LearnCode/Git/.git/
+  $ dir -a
+  . .. .git Code.bash hello.txt
+
+
+Download an Existing Remote Project : git clone
+-----------------------------------------------
+
+Creates a local copy of an existing Git repository, including its files, commit history, and branch information.
+
+  git clone https://github.com/user/repo.git  ->  Download a project from GitHub
+  git clone https://github.com/user/repo.git folder  ->  Clone into a custom named folder
+  cd repo  ->  Go into the downloaded project directory
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # clone repository
+  $ git clone https://github.com/Kumaravi-admin/git-repo.git
+  Cloning into 'git-repo'...
+  remote: Enumerating objects: 9, done.
+  remote: Counting objects: 100% (9/9), done.
+  remote: Compressing objects: 100% (4/4), done.
+  remote: Total 9 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+  Receiving objects: 100% (9/9), done.
+  
+  # clone repository in specific folder
+  $ git clone https://github.com/Kumaravi-admin/git-repo.git my-folder
+  Cloning into 'my-folder'...
+  remote: Enumerating objects: 9, done.
+  remote: Counting objects: 100% (9/9), done.
+  remote: Compressing objects: 100% (4/4), done.
+  remote: Total 9 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+  Receiving objects: 100% (9/9), done.
+  
+  # change directory
+  $ cd git-repo
+
+
+======================================================================
+GIT: BASIC SNAPSHOTTING
+======================================================================
+
+
+Check Repository State : git status
+-----------------------------------
+
+Shows the current state of the repository, including modified files, staged changes, and untracked files.
+
+  git status  ->  Full repository status details
+  git status -s  ->  Short clean flags summary layout printout
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  $ git status
+  On branch master
+  No commits yet
+  Untracked files:  (use "git add ..." to include in what will be committed)
+          Code.bash
+          hello.txt
+  
+  $ git status -s
+  ?? Code.bash
+  ?? hello.txt
+  # M  = modified
+  # A  = added to staging
+  # ?? = untracked (Git doesn't know about this file yet)
+
+
+Stage Changes : git add
+-----------------------
+
+Adds new or modified files to the staging area, preparing them to be included in the next commit.
+
+  git add hello.txt  ->  Stages one specific file explicitly
+  git add hello.txt bye.txt  ->  Stages multiple explicitly chosen assets
+  git add .  ->  Stages entire current folder tree changes
+  git add src/  ->  Stage an entire folder
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # create hello.txt and bye.txt files
+  $ touch hello.txt bye.txt
+  
+  # add hello.txt
+  $ git add hello.txt
+  
+  # add hello.txt and bye.txt
+  $ git add hello.txt bye.txt
+  
+  # create src folder
+  $ mkdir src
+  
+  # add src folder
+  $ git add src/
+  
+  # add all folders and files
+  $ git add .
+
+
+======================================================================
+GIT: BASIC SNAPSHOTTING – II
+======================================================================
+
+
+View Changes : git diff
+-----------------------
+
+Shows the differences between files, commits, or changes in the working directory and staging area.
+
+  git diff  ->  Checks changes in active tree NOT yet staged
+  git diff --staged  ->  Verifies modifications inside files that ARE staged
+  git diff --name-only  ->  Displays clean list of file names updated
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # show changes in the working directory that are NOT yet staged
+  $ git diff
+  index 3c7fba8..0000000
+  +++ /dev/null
+  @@ -1,10 +0,0 @@
+  -$ git status
+  -On branch master
+  -No commits yet
+  -Untracked files:
+  -(use "git add ..." to include in what will be committed)
+  - hello.txt
+  -$ git status -s
+  -?? hello.txt
+  \ No newline at end of file
+  
+  # show differences between the staging area (index) and the last commit
+  $ git diff --staged
+  index 6204f16..3c7fba8 100644
+  @@ -1,17 +1,10 @@
+  -$ git add hello.txt
+  -$ git add .
+  -$ git add src/
+  
+  # show the names of files that have changed
+  $ git diff --name-only
+  hello.txt
+
+
+Save Changes Permanently : git commit
+-------------------------------------
+
+Takes a snapshot of everything in the staging area and saves it to history.
+
+  git commit -m "Commit message"  ->  Commit staged changes with a single line message
+  git commit -am "Commit message"  ->  Shortcut to stage tracked files and commit instantly
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  $ git commit -m "Add hello.txt"
+  [master (root-commit) 188ea87] Add hello.txt
+  2 files changed, 17 insertions(+)
+  create mode 100644 Code.bash
+  create mode 100644 hello.txt
+  
+  $ git commit -am "update hello.txt"
+  [master 57363a6] update hello.txt
+  1 file changed, 1 insertion(+)
+
+
+======================================================================
+GIT: BASIC SNAPSHOTTING – III
+======================================================================
+
+
+Undo Local Changes : git restore
+--------------------------------
+
+Used to discard changes in files and restore them to a previous state, either from the staging area or the last commit.
+
+  git restore --staged hello.txt  ->  Unstages target asset — reverses git add action
+  git restore hello.txt  ->  Wipes local edits; file matches last commit state
+  git restore .  ->  Wipes absolute all local workspace file changes
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # unstage a file — undo git add
+  $ git restore --staged hello.txt
+  
+  # throw away all changes in a file permanently
+  # file goes back to how it was in last commit
+  $ git restore hello.txt
+  
+  # undo all changes in entire working directory
+  $ git restore .
+
+
+Roll Back Commits : git reset
+-----------------------------
+
+Moves HEAD to a previous commit and can undo commits, with options to keep or remove changes from the staging area and
+working directory depending on the mode used.
+
+  git reset --soft HEAD~1  ->  Drops latest commit; keeps changes staged
+  git reset --mixed HEAD~1  ->  Drops commit and staging; retains source code
+  git reset --hard HEAD~1  ->  Destroys commit, staging, and local changes permanently
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  $ echo "A" > file.txt && git add . && git commit -m "commit 1"
+  $ echo "B" >> file.txt && git add . && git commit -m "commit 2"
+  $ echo "C" >> file.txt && git add . && git commit -m "commit 3"
+  
+  # remove last commit but KEEP your changes staged (safe)
+  $ git reset --soft HEAD~1
+  
+  # remove last commit and put changes back in working directory
+  $ git reset --mixed HEAD~1
+  Unstaged changes after reset: M file.txt
+  
+  # remove last commit and DELETE all changes permanently
+  $ git reset --hard HEAD~1
+  HEAD is now at fe0f063 commit 1
+
+
+======================================================================
+GIT: BASIC SNAPSHOTTING – IV
+======================================================================
+
+
+Delete a File from Tracking : git rm
+------------------------------------
+
+Removes a file from Git tracking and the working directory (or only from Git tracking if used with --cached). The file is deleted only
+if it matches the latest committed version, and it helps keep the repository and staging area in sync
+
+  git rm hello.txt  ->  Delete file from project folder and Git tracking both
+  git rm --cached hello.txt  ->  Remove from tracking only; leaves file safe in folder
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # delete file from project and Git tracking both
+  $ git rm hello.txt
+  rm 'hello.txt'
+  
+  # make file and add to Git for testing git rm --cached command
+  $ echo "Hello Git Learner" > hello.txt
+  $ git add hello.txt
+  
+  # remove from Git tracking only — keep file on disk
+  # useful for files you forgot to add in .gitignore
+  $ git rm --cached hello.txt
+  rm 'hello.txt'
+  
+  # save the deletion with a commit
+  $ git commit -m "Remove hello.txt"
+  [master cbbd2d4] Remove hello.txt
+  1 file changed, 0 insertions(+), 0 deletions(-)
+  delete mode 100644 hello.txt
+
+
+Move or Rename Files : git mv
+-----------------------------
+
+Moves or renames files, directories, or symlinks in the repository. It updates the Git index automatically,
+but the change still needs to be committed.
+
+  git mv old.txt new.txt  ->  Rename a target asset instantly within Git context
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # create a file name hello.txt for test command
+  $ echo "hello git learner" > hello.txt
+  
+  # rename the file hello.txt to helloGitLearner.txt
+  $ git mv hello.txt helloGitLearner.txt
+  
+  # create a folder if not exist
+  $ mkdir src
+  
+  # move a file into a folder, folder must already exist
+  $ git mv helloGitLearner.txt src/hello.txt
+  
+  # commit changes
+  $ git commit -m "Move hello.txt into src folder"
+  [master ad226e4] Move hello.txt into src folder
+  1 file changed, 1 insertion(+)
+  create mode 100644 src/hello.txt
+
+
+======================================================================
+GIT: BRANCHING AND MERGING
+======================================================================
+
+
+What is a : Branch in Git
+-------------------------
+
+A branch in Git is a separate line of development. It lets you work on features or changes without affecting the main code.
+
+EXAMPLE:
+  main/master  --->  main trunk (stable code)
+  branch       --->  side path where you try new things
+
+
+Why branches are used:
+
+- Work on new features safely
+- Fix bugs without breaking main code
+- Test ideas separately
+- Multiple developers can work in parallel
+
+
+Branch Management : git branch
+------------------------------
+
+Lists, creates, or deletes branches in a Git repository. By default, it shows local branches and highlights the current one. It can also
+display remote branches or all branches using specific options.
+  git branch feature-login  ->  Allocates an individual secondary branch pointer
+  git branch  ->  Lists existing local tracks (\* shows active branch)
+  git branch -a  ->  List both local and remote branches
+  git branch -d feature-login  ->  Safe branch removal after a clean merge execution
+  git branch -D feature-login  ->  Force deletion regardless of merge states
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # create a new branch
+  $ git branch feature-login
+  
+  # list all branches (* marks the current one)
+  $ git branch
+    feature-login
+  * master
+  
+  # list both local and remote branches
+  $ git branch -a
+    feature-login
+  * master
+  
+  # delete a branch after it has been merged
+  $ git branch -d feature-login
+  Deleted branch feature-login (was ad226e4).
+  
+  # force delete — even if not merged
+  $ git branch -D feature-login
+  Deleted branch feature-login (was ad226e4).
+
+
+======================================================================
+GIT: BRANCHING AND MERGING – II
+======================================================================
+
+
+Change Branches : git switch
+----------------------------
+
+Switches to another branch and updates your working files to match it. You can also create and switch to a new branch using -c.
+New commits will be added to the currently active branch.
+
+  git switch feature-login  ->  Jumps working focus onto standard chosen branch
+  git switch -c feature-payment  ->  Initializes a new branch and jumps into it directly
+  git switch -  ->  Returns to the absolute previous checkout branch
+  git checkout feature-login  ->  Old way — still works but switch is cleaner
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # Create a new branch name feature-login (if it doesn't exist)
+  $ git branch feature-login
+  
+  # Switch to existing branch (in this case feature-login)
+  $ git switch feature-login
+  A       hello.txt
+  D       helloGitLearner.txt
+  A       src/hello.txt
+  Switched to branch 'feature-login'
+  
+  # Create a new branch name feature-payment and switch to it
+  $ git switch -c feature-payment
+  Switched to a new branch 'feature-payment'
+  
+  # Switch back to feature-login
+  $ git switch -
+  A       hello.txt
+  D       helloGitLearner.txt
+  A       src/hello.txt
+  Switched to branch 'feature-login'
+  
+  # Switch to the feature-login branch (old way; git switch is preferred)
+  $ git checkout feature-login
+  A       hello.txt
+  D       helloGitLearner.txt
+  A       src/hello.txt
+  Already on 'feature-login'
+
+
+======================================================================
+GIT: BRANCHING AND MERGING – III
+======================================================================
+
+
+Merge Branches : git merge
+--------------------------
+
+Combines changes from another branch into the current branch.
+It is commonly used to bring completed work from a feature branch into the main branch.
+
+  git switch main  ->  Step 1 — always switch to main branch first
+  git merge feature-login  ->  Step 2 — bring feature changes into active branch
+  git merge --no-ff feature-login  ->  Always create a merge commit (preserves history)
+  git branch -d feature-login  ->  Step 3 — delete the branch after merging (cleanup)
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # Create a main branch (if not exist)
+  $ git branch main
+  
+  # Switch to the main branch (always switch to the main branch first)
+  $ git switch main
+  A       hello.txt
+  D       helloGitLearner.txt
+  A       src/hello.txt
+  Switched to branch 'main'
+  
+  # Merge the feature-login branch into the main branch
+  $ git merge feature-login
+  Already up to date.
+  
+  # Always create a merge commit (preserves branch history)
+  $ git merge --no-ff feature-login
+  Already up to date.
+  
+  # Delete a branch after successful merge
+  $ git branch -d feature-login
+  Deleted branch feature-login (was ad226e4).
+
+
+Merge Conflict : Resolve Conflicts
+----------------------------------
+
+A merge conflict occurs when Git cannot automatically combine changes from different branches. You must manually review the
+conflicting code, choose the correct version (or combine both), and then complete the merge.
+
+EXAMPLE:
+  # attempt the merge
+  $ git merge feature-login
+  
+  # Git will tell you which files have conflicts
+  $ git status
+  
+  # open the conflicted file — you will see this inside:
+  # >>>>>> feature-login  hello.txt
+  $ git add hello.txt
+  $ git commit -m "Initial commit"
+  
+  # make some uncommitted changes
+  $ echo "Hello Git Learner" >> hello.txt
+  
+  # save unfinished work (cleans your working directory)
+  $ git stash save "login form work in progress"
+  Saved working directory and index state On main: login form work in progress
+  
+  # see all saved stashes
+  $ git stash list
+  stash@{0}: On main: login form work in progress
+  
+  # restore the latest stash and remove it from the stash list
+  $ git stash pop
+  On branch main
+  Changes not staged for commit:
+    modified:   hello.txt
+  Dropped refs/stash@{0}
+  
+  # restore the stash but keep it in the stash list
+  $ git stash apply stash@{0}
+  
+  # delete the stash manually
+  $ git stash drop stash@{0}
+  Dropped stash@{0}
+  
+  # wipe all stashes at once
+  $ git stash clear
+
+
+======================================================================
+GIT: BRANCHING AND MERGING – V
+======================================================================
+
+
+View Commit History : git log
+-----------------------------
+
+Displays the history of commits in a repository, including commit IDs, authors, dates, and messages. Various options can be used
+to customize how the commit history and changes are displayed.
+
+  git log  ->  Full history log showing hash, author, date, and notes
+  git log --oneline  ->  Ultra clean compact single line commit hash presentation
+  git log --oneline --graph --all  ->  Visual graph showing all branches
+  git log -5  ->  Show last 5 commits only
+  git log --oneline hello.txt  ->  See history of one specific file
+  git log --author="Your Name"  ->  See all commits by a specific person
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # Show the complete commit history with details
+  $ git log
+  commit 57363a64a7e2bfdae3c4617596223a9dd060e4a (HEAD -> master)
+  Author: Anjesh Kumar
+  Date:   Fri May 29 02:15:41 2026 +0530
+  
+      update hello.txt
+  
+  commit 188ea87716f325bd870bd787967a8aa8d6524775
+  Author: Anjesh Kumar
+  Date:   Fri May 29 02:14:34 2026 +0530
+  
+      Add hello.txt
+  
+  # Show a compact commit history (one commit per line)
+  $ git log --oneline
+  57363a6 (HEAD -> master) update hello.txt
+  188ea87 Add hello.txt
+  
+  # Display a visual graph of all branches and commits
+  $ git log --oneline --graph --all
+  * 57363a6 (HEAD -> master) update hello.txt
+  * 188ea87 Add hello.txt
+  
+  # Show only the last 5 commits
+  $ git log -5
+  commit 57363a64a7e2bfdae3c4617596223a9dd060e4a (HEAD -> master)
+  Author: Anjesh Kumar
+  Date:   Fri May 29 02:15:41 2026 +0530
+  
+      update hello.txt
+  
+  # Show commit history for a specific file
+  $ git log --oneline hello.txt
+  57363a6 (HEAD -> master) update hello.txt
+  188ea87 Add hello.txt
+  
+  # Show commits created by a specific author
+  $ git log --author="Anjesh Kumar"
+  commit e354a8d3f1a04a3dd4edf60b144d5a146b8ff178 (HEAD -> main)
+  Author: Anjesh Kumar
+  Date:   Fri May 29 23:57:31 2026 +0530
+      Initial commit
+
+
+======================================================================
+GIT: BRANCHING AND MERGING – VI
+======================================================================
+
+
+Mark a Version : git tag
+------------------------
+
+Creates, lists, verifies, or deletes tags in a Git repository. Tags are commonly used to mark important commits, such as releases
+and version numbers (e.g., v1.0.0), making them easy to reference later.
+
+  git tag v1.0.0  ->  Create a lightweight tag for the current commit
+  git tag -a v1.0.0 -m "First stable release"  ->  Create an annotated tag with a message (recommended)
+  git tag  ->  List all tags in the repository
+  git tag -a v1.0.0 f4a7c8e -m "Version 1"  ->  Create an annotated tag for a specific past commit
+  git tag -d v1.0.0  ->  Delete a local tag
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # Create a lightweight tag
+  $ git tag v1.0.0
+  
+  # Delete a tag for test next command
+  $ git tag -d v1.0.0
+  Deleted tag 'v1.0.0' (was e354a8d)
+  
+  # Create an annotated tag with a message (recommended)
+  $ git tag -a v1.0.0 -m "First stable release"
+  
+  # List all tags
+  $ git tag
+  v1.0.0
+  
+  # Delete a tag for test next command
+  $ git tag -d v1.0.0
+  Deleted tag 'v1.0.0' (was a5e4d69)
+  
+  # Tag a past commit using its hash
+  $ git tag -a v1.0.0 e354a8d -m "version 1"
+  
+  -----------------------------------------------------
+  # to find your commit hash
+  $ git log --oneline
+  e354a8d (HEAD -> master) your commit message here
+  # The hash is the short code on the left side — e354a8d. Use that in your git tag command.
+
+
+======================================================================
+GIT: REMOTE AND TEAM WORK
+======================================================================
+
+
+Connect to GitHub : git remote
+------------------------------
+
+It is used to connect your local project with an online repository like GitHub. It helps you send your code to GitHub (push) and get
+updates from GitHub (pull), so both local and online versions stay in sync.,
+
+  git remote add origin https://github.com/user/repo.git  ->  Connect to GitHub — once per project
+  git remote -v  ->  Verify the connection
+  git remote set-url origin https://github.com/user/new-repo.git  ->  Update remote URL if it changes
+  git remote remove origin  ->  Remove a remote connection
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # Connect to a remote repository (in this case GitHub) do this once per project
+  $ git remote add origin https://github.com/user/new-repo.git
+  
+  # Verify the connection
+  $ git remote -v
+  origin  https://github.com/user/new-repo.git (fetch)
+  origin  https://github.com/user/new-repo.git (push)
+  
+  # Update remote URL if it changed
+  $ git remote set-url origin https://github.com/Kumaravi-admin/git-repo.git
+  
+  # Remove a remote connection
+  $ git remote remove origin
+
+
+Upload Changes Online : git push
+--------------------------------
+
+Sends your local commits (changes) to a remote repository like GitHub. It updates the remote branch with your latest work so
+others can see it or so your online repo stays updated. The basic format is git push .
+
+  git push -u origin main  ->  Very first push — set upstream so Git remembers
+  git push  ->  Upload changes to a remote repository
+  git push -u origin feature-login  ->  Push a new branch for the first time
+  git push origin --tags  ->  Push all tags to GitHub
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  $ git remote add origin https://github.com/user/repo.git
+  
+  # very first push — set upstream so Git remembers
+  $ git push -u origin main
+  branch 'main' set up to track 'origin/main'.
+  
+  # push changes to the remote repository
+  $ git push
+  Everything up-to-date
+  
+  # push a new branch for the first time
+  $ git push -u origin feature-login
+  branch 'feature-login' set up to track 'origin/feature-login'.
+  
+  # push all tags to GitHub
+  $ git push origin --tags
+  Everything up-to-date
+
+
+======================================================================
+GIT: REMOTE AND TEAM WORK – II
+======================================================================
+
+
+Download and Merge : git pull
+-----------------------------
+
+Downloads the latest changes from a remote repository and merges them into your current branch. It helps keep your local
+project up to date with changes made in the remote repository.
+
+  git pull  ->  Always do this before starting work
+  git pull origin main  ->  Pull a specific branch
+  git pull --rebase origin main  ->  Pull with rebase instead of merge (cleaner history)
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # Always pull before starting work
+  $ git pull
+  Already up to date.
+  
+  # Pull a specific branch (in this case main branch)
+  $ git pull origin main
+  From https://github.com/Kumaravi-admin/git-repo
+   * branch            main       -> FETCH_HEAD
+  Already up to date.
+  
+  # Download latest changes and keep commit history clean by using rebase
+  $ git pull --rebase origin main
+  From https://github.com/Kumaravi-admin/git-repo
+   * branch            main       -> FETCH_HEAD
+  Already up to date.
+
+
+Download Without Merging : git fetch
+------------------------------------
+
+Downloads the latest changes, branches, and tags from a remote repository without merging them into your current branch. It
+lets you review remote updates before deciding whether to merge or rebase them into your work.
+
+  git fetch origin  ->  Download all changes from remote — does NOT merge
+  git log origin/main --oneline  ->  See what changed on GitHub before merging
+  git merge origin/main  ->  Now merge manually when you are ready
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # Download the latest changes from the remote repository without merging them
+  $ git fetch origin
+  
+  # View the commit history of the remote main branch in one-line format
+  $ git log origin/main --oneline
+  ee0fe07 (HEAD -> main, origin/main, origin/feature-login, feature-login) Merge branch 'main' of https://github.com/Kumaravi-admin/git-repo
+  d7ea970 Save local changes
+  e354a8d Initial commit
+  ad226e4 (feature-payment) Move hello.txt into src folder
+  cbbd2d4 Remove hello.txt
+  fe0f063 commit 1
+  19910e4 Delete hello.txt
+  b3a3418 Add hello.txt with greeting message
+  354a51e Add hello.txt with greeting message
+  
+  # Merge the fetched changes from the remote main branch into the current branch
+  $ git merge origin/main
+  Already up to date.
+
+
+======================================================================
+GIT: INSPECTION ADVANCED
+======================================================================
+
+
+Compare Branches : git diff
+---------------------------
+
+Shows the differences between files, commits, branches, or other Git states.
+It helps you compare changes and see what has been added, modified, or removed in a repository.
+
+  git diff  ->  Working directory vs staging area (basic)
+  git diff --staged  ->  Staging area vs last commit
+  git diff master feature-login  ->  Compare two branches
+  git diff abc123 def456  ->  Compare two specific commits using their hashes
+  git diff --name-only master feature-login  ->  Show only file names that changed between branches
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # Setup (already covered in previous notes)
+  git init && echo "Hello Git Learner" > hello.txt && git add . && git commit -m "first commit"
+  
+  echo "line 2" >> hello.txt
+  
+  # Working Directory vs Staging Area
+  $ git diff
+  @@ -1 +1,2 @@
+   Hello Git Learner
+  +line 2
+  
+  git add hello.txt
+  
+  # Staging Area vs Last Commit
+  $ git diff --staged
+  @@ -1 +1,2 @@
+   Hello Git Learner
+  +line 2
+  
+  git commit -m "second commit" && git switch -c feature-login
+  echo "line 3" >> hello.txt && git add . && git commit -m "feature commit"
+  
+  # Compare two branches
+  $ git diff master feature-login
+  @@ -1,2 +1,3 @@
+   Hello Git Learner
+   line 2
+  +line 3
+  
+  # Show only changed file names
+  $ git diff --name-only master feature-login
+  hello.txt
+  
+  # Compare two commits
+  $ git log --oneline
+  6360f6f (HEAD -> feature-login) feature commit
+  9481fc5 (master) second commit
+  09d6f82 first commit
+  
+  $ git diff 6360f6f 9481fc5
+  @@ -1,3 +1,2 @@
+   Hello Git Learner
+   line 2
+  -line 3
+  
+  --------------------------------------------------------------------------
+  |  +  Added line  |  -  Removed line   |  @@ Changed section of the file |
+  --------------------------------------------------------------------------
+
+
+======================================================================
+GIT: INSPECTION ADVANCED – II
+======================================================================
+
+
+Inspect a Commit : git show
+---------------------------
+
+Displays detailed information about a commit, tag, or other Git object. For commits, it shows the commit details, message, author,
+date, and the changes (diff) introduced by that commit.
+
+  git show  ->  See the most recent commit in detail
+  git show f4a7c8e  ->  See a specific commit using its hash
+  git show --name-only f4a7c8e  ->  See only the files that changed in a commit
+  git show f4a7c8e:hello.txt  ->  See a specific file from a past commit
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # See the most recent commit in detail
+  $ git show
+  commit 9481fc57cb60f17bc86f10dd276ea8f47f2179ba (HEAD -> master)
+  Author: Anjesh Kumar
+  Date:   Sat May 30 15:15:50 2026 +0530
+  
+      second commit
+  
+  diff --git a/hello.txt b/hello.txt
+  index d8096cc..075adae 100644
+  --- a/hello.txt
+  +++ b/hello.txt
+  @@ -1 +1,2 @@
+   Hello Git Learner
+  +line 2
+  
+  # Get commit hashes
+  $ git log --oneline
+  9481fc5 (HEAD -> master) second commit
+  09d6f82 first commit
+  
+  # See a specific commit using its hash
+  $ git show 09d6f82
+  commit 09d6f82db43d68dca71a72b23aa26de4b6fbf680
+  Author: Anjesh Kumar
+  Date:   Sat May 30 15:14:56 2026 +0530
+  
+      first commit
+  
+  diff --git a/hello.txt b/hello.txt
+  new file mode 100644
+  index 0000000..d8096cc
+  --- /dev/null
+  +++ b/hello.txt
+  @@ -0,0 +1 @@
+  +Hello Git Learner
+  
+  # See only the files changed in a commit
+  $ git show --name-only 09d6f82
+  commit 09d6f82db43d68dca71a72b23aa26de4b6fbf680
+  Author: Anjesh Kumar
+  Date:   Sat May 30 15:14:56 2026 +0530
+  
+      first commit
+  
+  hello.txt
+  
+  # See a specific file from a past commit
+  $ git show 09d6f82:hello.txt
+  Hello Git Learner
+
+
+======================================================================
+GIT: UNDOING ADVANCED
+======================================================================
+
+
+Undo a Pushed Commit : git revert
+---------------------------------
+
+Creates a new commit that reverses the changes made by a previous commit. Unlike git reset, it does not delete commit history,
+making it the safest way to undo commits that have already been pushed to a remote repository.
+
+  git revert HEAD  ->  Undo the last commit safely
+  git revert f4a7c8e  ->  Undo a specific past commit using its hash
+  git revert HEAD --no-commit  ->  Revert without committing immediately
+  git revert --abort  ->  To cancel the revert before committing
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  $ git init
+  
+  # First commit
+  $ echo "Line 1" > hello.txt
+  $ git add .
+  $ git commit -m "first commit"
+  
+  # Second commit
+  $ echo "Line 2" >> hello.txt
+  $ git add .
+  $ git commit -m "second commit"
+  
+  # Third commit
+  $ echo "Line 3" >> hello.txt
+  $ git add .
+  $ git commit -m "third commit"
+  
+  # View commit history
+  $ git log --oneline
+  59b056c (HEAD -> master) third commit
+  0699abd second commit
+  672f966 first commit
+  
+  # Undo the latest commit by creating a new commit
+  $ git revert HEAD
+  [master 2050a02] Revert "third commit"
+   1 file changed, 1 deletion(-)
+  
+  # Undo a specific commit by creating a new commit
+  $ git revert 0699abd
+  [master 6446f95] Revert "second commit"
+   1 file changed, 1 deletion(-)
+  
+  # Apply revert changes but don't create a commit yet
+  $ git revert HEAD --no-commit
+  $ git commit -m "Revert login page changes"
+  [master 239ca2e] Revert login page changes
+   1 file changed, 1 insertion(+)
+  
+  # Fourth commit
+  $ echo "Line 4" >> hello.txt
+  $ git add .
+  $ git commit -m "fourth commit"
+  
+  # Start a revert without committing
+  $ git revert HEAD --no-commit
+  
+  # Cancel the revert
+  $ git revert --abort
+
+
+======================================================================
+GIT: UNDOING ADVANCED – II
+======================================================================
+
+
+Clean Up Commit History : git rebase
+------------------------------------
+
+Moves your commits to a new base commit, creating a cleaner and more linear project history. It is commonly used to update a
+feature branch with the latest changes from another branch or to combine and reorganize commits before merging.
+
+  git switch feature-login  ->  Step 1 — switch to your feature branch
+  git rebase main  ->  Step 2 — rebase it on top of main
+  git add hello.txt then git rebase --continue  ->  Fix conflict, stage it, then continue
+  git rebase --abort  ->  Want to cancel the rebase entirely
+  git rebase -i HEAD~3  ->  Interactive rebase — edit last 3 commits
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  $ git init # Initialize a new repository
+  
+  # Create a file and make the first commit on master
+  $ echo "Line 1" > hello.txt && git add . && git commit -m "inital commit"
+  
+  # Create a new branch and switch to it
+  $ git switch -c feature-login
+  Switched to a new branch 'feature-login'
+  
+  # Make two commits on feature-login branch
+  $ echo "Feautre Line 1" >> hello.txt && git add . && git commit -m "Freature commit 1"
+  
+  # Second commit on feature branch
+  $ echo "Feature Line 2" >> hello.txt && git add . && git commit -m "Feature commit 2"
+  
+  # Switch back to master and make a commit
+  $ git switch master
+  $ echo "Main line 1" >> hello.txt && git add . && git commit -m "Main comit 1"
+  
+  # View commit history as a graph (shows branch divergence)
+  $ git log --oneline --graph --all
+  * 6efb589 (HEAD -> master) Main comit 1
+  | * 52fb54b (feature-login) Feature commit 2
+  | * 65456e0 Freaure commit 1
+  |/
+  * 6f4d50a inital commit
+  
+  # Switch back to feature branch before rebasing
+  $ git switch feature-login
+  
+  # Rebase feature branch onto master (replays commits on top of master)
+  $ git rebase master
+  
+  # Conflict occurs during first commit replay
+  Auto-merging hello.txt
+  CONFLICT (content): Merge conflict in hello.txt
+  error: could not apply 65456e0... Freaure commit 1
+  
+  # After fixing conflict manually, stage resolved file
+  $ git add hello.txt
+  
+  # Continue rebase process
+  $ git rebase --continue
+  [detached HEAD f857b5a] Freaure commit 1
+   1 file changed, 4 insertions(+)
+  
+  # Option to abort rebase if needed
+  $ git rebase --abort
+  
+  # Interactive rebase example (edit last commit)
+  $ git rebase -i HEAD~1
+  Successfully rebased and updated refs/heads/feature-login.
+
+
+======================================================================
+GIT: UNDOING ADVANCED – III
+======================================================================
+
+
+Pick One Commit : git cherry-pick
+---------------------------------
+
+Takes existing commits and applies their changes onto your current branch as new commits.
+Your working directory must be clean, and if any conflict happens, Git pauses so you can fix it before continuing.
+
+  git log --oneline feature-login  ->  First find the commit hash you want
+  git cherry-pick f4a7c8e  ->  Apply that one commit to current branch
+  git cherry-pick f4a7c8e --no-commit  ->  Apply without committing immediately
+  git cherry-pick abc123 def456 ghi789  ->  Apply multiple commits at once
+  git cherry-pick --abort  ->  Cancel a cherry-pick in progress
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  $ git init
+  $ echo "Base line" > hello.txt && git add . && git commit -m "base commit"
+  
+  # create feature branch and make two commits
+  $ git switch -c feature-login
+  $ echo "Feature A" >> hello.txt && git add . && git commit -m "feature A"
+  $ echo "Feature B" >> hello.txt && git add . && git commit -m "feature B"
+  
+  # go back to master
+  $ git switch master
+  
+  # view feature commits to get hashes
+  $ git log --oneline feature-login
+  285d3fa (feature-login) feature B
+  e5c403b feature A
+  1ff8671 (HEAD -> master) base commit
+  
+  # cherry-pick one commit
+  $ git cherry-pick 285d3fa
+  [master 0032118] feature B
+  1 file changed, 1 insertion(+)
+  
+  # cherry-pick multiple commits
+  $ git cherry-pick e5c403b 285d3fa
+  
+  # cherry-pick without committing immediately
+  $ git cherry-pick --no-commit e5c403b
+  
+  # if conflict happens: fix file then continue
+  $ git add hello.txt
+  $ git cherry-pick --continue
+  
+  # cancel cherry-pick
+  $ git cherry-pick --abort
+
+
+======================================================================
+GIT: IGNORE FILES
+======================================================================
+
+
+Ignore Files : .gitignore
+-------------------------
+
+A .gitignore file specifies intentionally untracked files that Git should ignore. Files already tracked by Git are not affected. Each line
+in a .gitignore file specifies a pattern — Git checks each untracked file against these patterns before deciding whether to track it
+
+  touch .gitignore  ->  Create the file in your project root
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # create the .gitignore file in your project root
+  $ touch .gitignore
+
+
+EXAMPLE (.gitignore content):
+  # Dependencies — never commit these
+  
+  node_modules/
+  
+  # Environment variables — passwords live here
+  
+  .env
+  .env.local
+  
+  # Log files
+  
+  \*.log
+  
+  # Operating system files
+  
+  .DS_Store
+  Thumbs.db
+  
+  # Build output folders
+  
+  dist/
+  build/
+
+
+EXAMPLE:
+  # stage and commit the .gitignore file
+  $ git add .gitignore
+  $ git commit -m "Add .gitignore"
+  [master d0b79ce] Add .gitignore
+   1 file changed, 17 insertions(+)
+   create mode 100644 .gitignore
+
+
+======================================================================
+GIT: DAILY WORKFLOW
+======================================================================
+
+
+Workflow Local
+--------------
+
+This workflow explains a basic Git process for solo development. You start by initializing a repository, track and save changes using
+commits, and use branches to build new features safely. After completing the feature, you merge it back into the main branch and
+remove the feature branch to keep the project clean and organized.
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # step 1 — initialize repository
+  $ git init
+  
+  # step 2 — create your files and work...
+  
+  # step 3 — check what changed
+  $ git status
+  $ git diff
+  
+  # step 4 — stage your changes
+  $ git add .
+  
+  # step 5 — save your work
+  $ git commit -m "What you did"
+  
+  # step 6 — create a branch for new feature
+  $ git switch -c feature-dark-mode
+  
+  # step 7 — work on feature...
+  $ git add .
+  $ git commit -m "Add dark mode toggle"
+  
+  # step 8 — merge back into main
+  $ git switch main
+  $ git merge feature-dark-mode
+  
+  # step 9 — clean up branch
+  $ git branch -d feature-dark-mode
+
+
+Workflow Remote
+---------------
+
+This workflow shows how to use Git with GitHub for a solo project. You connect your repo to GitHub, push your code,
+and keep syncing changes as you work. Features are developed in branches, merged into main, and pushed again to GitHub.
+Unused branches are deleted to keep things clean.
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # step 1 — connect local repo to GitHub (do this once)
+  $ git remote add origin https://github.com/user/repo.git
+  
+  # step 2 — first push to GitHub
+  $ git push -u origin main
+  branch 'main' set up to track 'origin/main'.
+  
+  # step 3 — do your work and commit...
+  $ git add .
+  $ git commit -m "What you did"
+  
+  # step 4 — push to GitHub
+  $ git push
+  Everything up-to-date
+  
+  # step 5 — create a branch, work, merge
+  $ git switch -c feature-dark-mode
+  $ git add .
+  $ git commit -m "Add dark mode toggle"
+  $ git switch main
+  $ git merge feature-dark-mode
+  
+  # step 6 — push updated main to GitHub
+  $ git push
+  
+  # step 7 — clean up
+  $ git branch -d feature-dark-mode
+
+
+======================================================================
+GIT: DAILY WORKFLOW – II
+======================================================================
+
+
+Workflow Team
+-------------
+
+This workflow shows how teams work with Git and GitHub. You always start by pulling the latest code, then create a feature
+branch for your task. After working and committing changes, you update your branch with the latest main branch using rebase to
+avoid conflicts. Once everything is ready, you merge your feature into main, push it to GitHub, and delete the branch to keep the
+repository clean.
+
+EXAMPLE:
+  $ cd /d/LearnCode/Git     # Move to the project working directory
+  -----------------------------------------------------------------------------------------
+  # step 1 — always pull latest changes first
+  $ git pull
+  Already up to date.
+  
+  # step 2 — create your own branch for the task
+  $ git switch -c feature-dark-mode
+  Switched to a new branch 'feature-dark-mode'
+  
+  # step 3 — do your work...
+  $ git add .
+  $ git commit -m "Add dark mode toggle"
+  [feature-dark-mode a1b2c3d] Add dark mode toggle
+   1 file changed, 10 insertions(+)
+  
+  # step 4 — before merging, get latest main changes
+  $ git switch main
+  $ git pull
+  Already up to date.
+  $ git switch feature-dark-mode
+  
+  # step 5 — rebase your branch on top of latest main
+  $ git rebase main
+  Successfully rebased and updated refs/heads/feature-dark-mode.
+  
+  # step 6 — fix conflicts if any
+  $ git add hello.txt
+  $ git rebase --continue
+  
+  # step 7 — merge into main
+  $ git switch main
+  $ git merge feature-dark-mode
+  Updating a1b2c3d..f4e5d6c
+  Fast-forward
+  
+  # step 8 — push to GitHub
+  $ git push
+  Everything up-to-date
+  
+  # step 9 — clean up branch
+  $ git branch -d feature-dark-mode
+  Deleted branch feature-dark-mode (was f4e5d6c).

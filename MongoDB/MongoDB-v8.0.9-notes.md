@@ -368,11 +368,11 @@ This method save current time
 
 ### Validation Shema : For existing collection
 
-If you wont to add validation schema in existing collection follow this complete example (make collection name personal)
+If you want to add validation schema in existing collection follow this complete example (make collection name personal)
 
 ```js
 db.runCommand({
-  collMod: "personal", //collection name which one you wont add validation
+  collMod: "personal", //collection name which one you want add validation
   validator: {
     $jsonSchema: {
       required: ["name", "age", "married", "dob", "weight", "kids", "address"],
@@ -386,7 +386,7 @@ db.runCommand({
           bsonType: "int", //integer type
           minimum: 20,
           maximum: 35,
-          description: "Age must be an integer between 20 and 35 is reiquired",
+          description: "Age must be an integer between 20 and 35 is required",
         },
         married: {
           bsonType: "bool", //Boolean type
@@ -450,16 +450,16 @@ db.createCollection("students", {
   validator: {
     $jsonSchema: {
       title: "Student Object validation", // Title show when validation fails
-      required: ["name", "age", "course"], // Define all require filed here
+      required: ["name", "age", "course"], // Define all require field here
 
-      // Define validation rule for all filed in properties object
+      // Define validation rule for all field in properties object
       properties: {
         name: {
           bsonType: "string", // define type in bsonType properties
           description: "must be a string and is required",
         }, // msg show when validation false (description show when validation false
         age: {
-          bsonType: "int", // filed type int = integer
+          bsonType: "int", // field type int = integer
           minimum: 5,
           maximum: 20,
           description: "age must be an integer in [5, 20] and is required",
@@ -477,7 +477,7 @@ db.createCollection("students", {
 
 ### Insert : Data
 
-Let's insert data in student collection with correct data type, but when you pass wrong datatype in any filed that throw a error
+Let's insert data in student collection with correct data type, but when you pass wrong datatype in any field that through a error
 
 ```js
 db.students.insertOne({
@@ -489,7 +489,7 @@ db.students.insertOne({
 
 ### Insert : Data
 
-Let's insert data in personal collection with correct data type, but when you pass wrong datatype in any filed that throw a error
+Let's insert data in personal collection with correct data type, but when you pass wrong datatype in any field that through a error
 
 ```js
 db.personal.insertOne({
@@ -636,7 +636,7 @@ db.students.updateOne(
 
 ### Operator : $rename
 
-Rename the filed name for all document in collection using updateMany for update all document in collection
+Rename the field name for all document in collection using updateMany for update all document in collection
 
 ```js
 db.students.updateMany(
@@ -670,7 +670,7 @@ db.students.updateMany(
 
 ### Operator : $min
 
-Update the minimum value to filed (if filed value less then update value then that value update to document)
+Update the minimum value to field (if field value less then update value then that value update to document)
 
 ```js
 db.students.updateOne(
@@ -685,7 +685,7 @@ db.students.updateOne(
 
 ### Operator : $max
 
-Update the Max value to filed (if filed value greater then update value then that value update to document)
+Update the Max value to field (if field value greater then update value then that value update to document)
 
 ```js
 db.students.updateOne(
@@ -1073,7 +1073,7 @@ db.students.find({
 
 ### Greater Than : $gt
 
-This query fetches all documents from the students collection where the age is greater than 20. (work only with numeric filed)
+This query fetches all documents from the students collection where the age is greater than 20. (work only with numeric field)
 
 ```js
 db.students.find({
@@ -1083,7 +1083,7 @@ db.students.find({
 
 ### Greater Than or equal : $gte
 
-This will return all documents in the students collection where age is greater than or equal to 20. (work only with numeric filed)
+This will return all documents in the students collection where age is greater than or equal to 20. (work only with numeric field)
 
 ```js
 db.students.find({
@@ -1097,7 +1097,7 @@ db.students.find({
 
 ### Less than : $lt
 
-This query returns all documents in the students collection where age is less than 20. (work only with numeric filed)
+This query returns all documents in the students collection where age is less than 20. (work only with numeric field)
 
 ```js
 db.students.find({
@@ -1107,7 +1107,7 @@ db.students.find({
 
 ### Less than or equal : $lte
 
-This retrieves all documents in the students collection where the age is less than or equal to 20. (work only with numeric filed)
+This retrieves all documents in the students collection where the age is less than or equal to 20. (work only with numeric field)
 
 ```js
 db.students.find({
@@ -1488,7 +1488,7 @@ db.students.findOneAndUpdate(
 
 ### Update With : projection
 
-Update the Document and Return update document with projection (which filed you wont to see)
+Update the Document and Return update document with projection (which field you want to see)
 
 ```js
 db.students.findOneAndUpdate(
@@ -1697,7 +1697,7 @@ db.students.aggregate([
 
 ### Aggregate With : $project
 
-Reshape the documents by including, excluding, or adding new fields, and add custom filed
+Reshape the documents by including, excluding, or adding new fields, and add custom field
 
 ```js
 db.students.aggregate([
@@ -1756,7 +1756,7 @@ db.students.aggregate([
   {
     $group: {
       _id: "$class", // Group by class field
-      count: { $sum: 1 }, // Count custom filed name
+      count: { $sum: 1 }, // Count custom field name
     },
   },
 ]);
@@ -1772,7 +1772,7 @@ db.students.aggregate([
   {
     $group: {
       _id: "$class", // Group by class field
-      count: { $sum: 1 }, // Count custom filed name
+      count: { $sum: 1 }, // Count custom field name
     },
   },
 ]);
@@ -1788,7 +1788,7 @@ db.students.aggregate([
     $group: {
       _id: "$class",
       count: { $count: {} },
-    }, // count is custom filed name
+    }, // count is custom field name
   },
 ]);
 ```
@@ -1803,7 +1803,7 @@ db.students.aggregate([
     $group: {
       _id: "$class",
       count: { $count: {} },
-    }, // count is custom filed name
+    }, // count is custom field name
   },
   { $sort: { count: 1 } }, // Sort by count in descending order
 ]);
@@ -2111,7 +2111,7 @@ db.library.insertMany([
 
 ### Join Example 1 : $lookup
 
-Join Students Collection to Library Collection throw Library Collection student_id Field to Students Collection \_id Field
+Join Students Collection to Library Collection through Library Collection student_id Field to Students Collection \_id Field
 
 ```js
 db.library.aggregate([
@@ -2129,7 +2129,7 @@ db.library.aggregate([
 
 ### Join Example 2 : $lookup
 
-Join Students Collection to Library Collection throw Students Collection \_id Field to Library Collection Student_id Filed
+Join Students Collection to Library Collection through Students Collection \_id Field to Library Collection Student_id field
 
 ```js
 db.students.aggregate([
@@ -2188,7 +2188,7 @@ db.orders.insertMany([
 
 ### Join Example 4 : $lookup
 
-Join Customer Collection to Oder Collection throw Customer \_id to order customer_id filed
+Join Customer Collection to Oder Collection through Customer \_id to order customer_id field
 
 ```js
 db.customers.aggregate([
@@ -2205,7 +2205,7 @@ db.customers.aggregate([
 
 ### Join Example 5 : $lookup
 
-Join Library Collection to Students Collection throw Library Collection student_id Field to Students Collection \_id Field
+Join Library Collection to Students Collection through Library Collection student_id Field to Students Collection \_id Field
 and replace the root document with the merged object
 This will merge the Student document into the Library document, removing the Student array
 
@@ -2354,7 +2354,7 @@ db.students.insertMany([
 ]);
 ```
 
-### Example 1 : $addFileds + $concat
+### Example 1 : $addfields + $concat
 
 Fetch Document and concat field in contact first name & last name and how in fullName field
 
@@ -2363,17 +2363,17 @@ db.students.aggregate([
   {
     $addFields: {
       // Add new field fullName
-      // Concatenate firstname and lastName with a space in between
+      // Concatnate firstname and lastName with a space in between
       fullName: { $concat: ["$firstname", " ", "$lastName"] },
     },
   },
 ]);
 ```
 
-### Example 2 : $addFileds + $$REMOVE
+### Example 2 : $addfields + $$REMOVE
 
 Fetch Document and concat field in existing \_id field, show full name in \_id field,
-Remove existing fields firstname and lastName after concatenating them into fullName
+Remove existing fields firstname and lastName after Concatnating them into fullName
 
 ```js
 db.students.aggregate([
@@ -2387,7 +2387,7 @@ db.students.aggregate([
 ]);
 ```
 
-### Example 3 : $addFileds + ifNull
+### Example 3 : $addfields + ifNull
 
 Fetch Document and concat field in existing \_id field, show full name in \_id field, If city is null, remove it from the output
 
@@ -2409,7 +2409,7 @@ db.students.aggregate([
 
 ## Page 37 — Aggregation Pipeline : $addFields Operators-II
 
-### Example 4 : $addFileds + $cond (if else)
+### Example 4 : $addfields + $cond (if else)
 
 Fetch Document and concat field in existing \_id field, show full name in \_id field,
 If city is "Delhi", remove it from the output, otherwise keep
@@ -2436,7 +2436,7 @@ db.students.aggregate([
 ]);
 ```
 
-### Example 5 : $addFileds + $match
+### Example 5 : $addfields + $match
 
 Match document with \_id 1 and add fullName field, add firstname and lastName fields to fullName, and remove firstname and lastName fields
 
@@ -2453,7 +2453,7 @@ db.students.aggregate([
 ]);
 ```
 
-### Example 6 : $addFileds + custome field
+### Example 6 : $addfields + custome field
 
 Match document with \_id 1 and add fullName field, and remove firstname and lastName fields Also, add a new field "age" to the "profile" object
 
@@ -2475,7 +2475,7 @@ db.students.aggregate([
 
 ## Page 38 — Aggregation Pipeline : $addFields, $unwind-III
 
-### Example 7 : $addFileds
+### Example 7 : $addfields
 
 add new value in marks array Match document with \_id 1 and add fullName field, add a new value to the marks array, and remove firstname and lastName fields
 
@@ -2494,7 +2494,7 @@ db.students.aggregate([
 ]);
 ```
 
-### Example 8 : $addFileds
+### Example 8 : $addfields
 
 Match document with \_id 1 and add fullName field, remove firstname and lastName fields, and calculate total marks
 
@@ -3104,7 +3104,7 @@ db.students.aggregate([
 
 ### Sub String Operator : $substrCP
 
-Extracts a substring from a string based on code point position.
+Replaces the first occurrence of a specified string.
 
 ```js
 db.students.aggregate([
@@ -3122,7 +3122,7 @@ db.students.aggregate([
 
 ### Replace String Operator : $replaceOne
 
-Extracts a substring from a string based on code point position.
+Replaces the first occurrence of a specified string.
 
 ```js
 db.students.aggregate([
@@ -3146,7 +3146,7 @@ db.students.aggregate([
     $project: {
       updateString: {
         $replaceAll: {
-          input: "My Name is Khan his name is Khan", // in reallife we use field like
+          input: "My Name is Khan his name is Khan", // in real life we use field like
           find: "Khan",                                           "$name" not a string
           replacement: "Kapoor,",
         },
@@ -3170,9 +3170,9 @@ db.students.aggregate([
 ]);
 ```
 
-### Concate String Operator : $concat
+### Concat String Operator : $concat
 
-Concatenates two or more strings together.
+Concatnates two or more strings together.
 
 ```js
 db.students2.aggregate([
@@ -4084,7 +4084,7 @@ db.students2.aggregate([
 ### Reduce Operator with string contact nation : $reduce
 
 This operator applies an expression to each element in an array, accumulating a single result.
-Example: Concatenate all hobbies into a single string
+Example: Concatnate all hobbies into a single string
 
 ```js
 db.students.aggregate([
@@ -4094,7 +4094,7 @@ db.students.aggregate([
         $reduce: {
           input: "$hobbies",
           initialValue: "",
-          in: { $concat: ["$$value", "$$this"] }, // Concatenates all hobbies into a
+          in: { $concat: ["$$value", "$$this"] }, // Concatnates all hobbies into a
         },                                                               single string
       },
     },
@@ -4139,7 +4139,7 @@ db.students.aggregate([{
 
 ### Contact Operator : $concatArrays
 
-This operator concatenates two or more arrays into a single array.
+This operator Concatnates two or more arrays into a single array.
 
 ```js
 db.students3.aggregate([
@@ -4286,7 +4286,7 @@ db.students.aggregate([
 
 ## Page 63 — Aggregation Pipeline : Type Operators-II
 
-### To Integer Operator With Bool Filed : $toInt
+### To Integer Operator With Bool field : $toInt
 
 converts a boolean value to an integer. Example: Convert the 'pass' field to an integer
 
@@ -4738,7 +4738,7 @@ executionStats: {
 
 ## Page 69 — Indexing : Create, Get, Drop Indexes-II
 
-### Create Index : Single filed Indexes
+### Create Index : Single field Indexes
 
 This code creates an index on the "name" field of the "students" collection,
 
@@ -4780,7 +4780,7 @@ db.students.find({ class: "BCA" }).sort({ age: -1 }).explain("executionStats");
 
 ### Create Index : Unique Indexes
 
-This code creates a unique index on the "email" field of the "students" collection, ensuring that no two documents can have the same email address. If you try to insert a document with an email that already exists, it will throw an
+This code creates a unique index on the "email" field of the "students" collection, ensuring that no two documents can have the same email address. If you try to insert a document with an email that already exists, it will through an
 
 ```js
 // Create Index
@@ -4799,7 +4799,7 @@ db.students.find({ email: "suniel@email.com" });
 db.students.find({ email: "suniel@email.com" }).explain("executionStats");
 
 // If you try to insert a document with an email that already exists,
-it will throw an error
+it will through an error
 db.students.insertOne(
 { _id: 8, name: "Katrina Kaif", age: 21, class: "BCA", email: "kartik@email.com"}
 );
@@ -4850,7 +4850,7 @@ db.students.find({ email: "suniel@email.com" }).explain("executionStats");
 
 ---
 
-## Page 71 — MongoDatabse Tool : Import Json File, Backup & Restore Database
+## Page 71 — MongoDB Tools : Import Json File, Backup & Restore Database
 
 ### 1st Step : Download & Install
 

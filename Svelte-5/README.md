@@ -1,8 +1,10 @@
-# Svelte v5 Notes
+# Svelte v5 Notes [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/Svelte-5/Svelte-v5-notes.pdf)
 
 A comprehensive collection of **Svelte v5 Notes** covering Runes, Template Syntax, Styling, Special Elements, Runtime APIs, and Best Practices.
 
 These notes are designed for developers who want a structured, page-by-page reference while learning Svelte v5.
+
+> **Note:** For a better reading experience and improved visual formatting, download and view the PDF version of these notes.
 
 ## Features
 
@@ -67,7 +69,7 @@ These notes are designed for developers who want a structured, page-by-page refe
 ### Runtime APIs
 
 - `createContext`
-- Lifecycle Hooks
+- `Lifecycle Hooks`
 - `onMount`
 - `onDestroy`
 - `tick`
