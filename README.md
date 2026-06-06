@@ -7,7 +7,7 @@ This repository contains structured learning notes, commands, code examples, and
 ## Contents
 
 - Git [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/Git/Git-notes.pdf)
-- Laravel (11 & 12) [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/Laravel/Laravel-12%20Notes.pdf)
+- Laravel (11 & 12) [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/Laravel/Laravel-11-Notes.pdf)
 - MongoDB [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/MongoDB/MongoDB-v8.0.9-notes.pdf)
 - ReactJS [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/ReactJs/React-v18-notes.pdf)
 - React Native [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/ReactJs/React-v18-notes.pdf)
