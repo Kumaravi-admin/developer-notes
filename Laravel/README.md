@@ -1,4 +1,4 @@
-# Laravel 11 Notes [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/Laravel/Laravel-12%20Notes.pdf)
+# Laravel 11 Notes [View PDF](https://github.com/Kumaravi-admin/developer-notes/blob/main/Laravel/Laravel-11-Notes.pdf)
 
 A comprehensive Laravel 11 & Laravel 12 learning guide covering beginner to advanced concepts with practical examples, code snippets, database structures, Eloquent relationships, authentication, authorization, API development, and real-world application workflows.
 
